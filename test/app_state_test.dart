@@ -70,4 +70,20 @@ void main() {
     await reloaded.load();
     expect(reloaded.sessions, isEmpty);
   });
+
+  test('저장값이 JSON도 아니면 load()가 죽지 않고 빈 목록으로 시작한다', () async {
+    SharedPreferences.setMockInitialValues({'focus_sessions': '이건 JSON이 아님'});
+    final state = AppState();
+    await state.load();
+    expect(state.sessions, isEmpty);
+  });
+
+  test('저장값이 JSON이어도 항목 모양이 틀리면 빈 목록으로 시작한다', () async {
+    SharedPreferences.setMockInitialValues({
+      'focus_sessions': '[{"startedAt":"2026-07-20T10:00:00.000","success":true}]',
+    });
+    final state = AppState();
+    await state.load();
+    expect(state.sessions, isEmpty);
+  });
 }

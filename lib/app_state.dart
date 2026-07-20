@@ -74,10 +74,17 @@ class AppState extends ChangeNotifier {
     final raw = prefs.getString(_key);
     _sessions.clear();
     if (raw != null) {
-      final decoded = jsonDecode(raw) as List<dynamic>;
-      _sessions.addAll(
-        decoded.map((e) => FocusSession.fromJson(e as Map<String, dynamic>)),
-      );
+      try {
+        final decoded = jsonDecode(raw) as List<dynamic>;
+        // ponytail: 저장값이 깨져 있으면(포맷 변경, 손상 등) 빈 목록으로 시작한다.
+        // 로깅 인프라가 없어 조용히 무시 — 앱이 시작 시 죽는 것보다 낫다.
+        _sessions.addAll(
+          decoded
+              .map((e) => FocusSession.fromJson(e as Map<String, dynamic>)),
+        );
+      } catch (_) {
+        _sessions.clear();
+      }
     }
     notifyListeners();
   }
