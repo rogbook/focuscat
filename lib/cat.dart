@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 import 'app_state.dart';
 
@@ -7,7 +8,8 @@ enum CatMood { idle, focused, happy, sad }
 
 /// 성장 단계와 기분에 따라 달라지는 고양이.
 ///
-/// ponytail: 도형으로 그린다. 재미가 확인되면 Rive/Lottie 아트로 교체한다.
+/// Rive 아트(assets/cat.riv)로 그린다. 이 파일엔 기분(mood) 상태가 없어
+/// [mood]는 받기만 하고 아직 화면엔 반영하지 않는다 — 아래 주석 참고.
 class CatView extends StatelessWidget {
   const CatView({
     super.key,
@@ -20,134 +22,38 @@ class CatView extends StatelessWidget {
   final CatMood mood;
   final double size;
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: CustomPaint(painter: _CatPainter(stage: stage, mood: mood)),
-    );
-  }
-}
-
-class _CatPainter extends CustomPainter {
-  _CatPainter({required this.stage, required this.mood});
-
-  final CatStage stage;
-  final CatMood mood;
-
-  static const _inkColor = Color(0xFF4A4453);
-
-  /// 성장할수록 몸집이 커진다.
+  /// 성장할수록 몸집이 커진다. 옛 CustomPainter와 같은 비율.
   double get _scale => switch (stage) {
         CatStage.baby => 0.7,
         CatStage.teen => 0.85,
         CatStage.adult => 1.0,
       };
 
-  Color get _furColor => switch (mood) {
-        CatMood.happy => const Color(0xFFFFC9A9),
-        CatMood.sad => const Color(0xFFC9C4D6),
-        // 집중 중엔 다른 색상군으로 바꾸지 않고, 같은 웜톤 안에서 살짝 진하게만 구분한다.
-        CatMood.focused => const Color(0xFFF0C9A0),
-        CatMood.idle => const Color(0xFFF5D5B8),
-      };
-
   @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final r = size.width / 2 * _scale;
-    final fur = Paint()..color = _furColor;
-    final ink = Paint()
-      ..color = _inkColor
-      ..strokeWidth = r * 0.06
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    // 귀
-    for (final dx in [-0.62, 0.62]) {
-      final path = Path()
-        ..moveTo(center.dx + r * dx - r * 0.26, center.dy - r * 0.55)
-        ..lineTo(center.dx + r * dx, center.dy - r * 1.15)
-        ..lineTo(center.dx + r * dx + r * 0.26, center.dy - r * 0.55)
-        ..close();
-      canvas.drawPath(path, fur);
-    }
-
-    // 얼굴
-    canvas.drawCircle(center, r * 0.9, fur);
-
-    // 눈
-    final eyeY = center.dy - r * 0.12;
-    for (final dx in [-0.34, 0.34]) {
-      final eye = Offset(center.dx + r * dx, eyeY);
-      if (mood == CatMood.happy) {
-        // ^ ^ 웃는 눈
-        canvas.drawPath(
-          Path()
-            ..moveTo(eye.dx - r * 0.14, eye.dy + r * 0.07)
-            ..lineTo(eye.dx, eye.dy - r * 0.09)
-            ..lineTo(eye.dx + r * 0.14, eye.dy + r * 0.07),
-          ink,
-        );
-      } else if (mood == CatMood.sad) {
-        // 아래로 처진 눈
-        canvas.drawPath(
-          Path()
-            ..moveTo(eye.dx - r * 0.14, eye.dy - r * 0.05)
-            ..lineTo(eye.dx, eye.dy + r * 0.09)
-            ..lineTo(eye.dx + r * 0.14, eye.dy - r * 0.05),
-          ink,
-        );
-      } else {
-        // 집중 중엔 눈을 가늘게, 평소엔 동그랗게
-        final h = mood == CatMood.focused ? r * 0.07 : r * 0.15;
-        canvas.drawOval(
-          Rect.fromCenter(center: eye, width: r * 0.24, height: h * 2),
-          Paint()..color = _inkColor,
-        );
-        if (mood == CatMood.focused) {
-          // 몰입한 눈썹 — 바깥쪽이 높고 안쪽이 살짝 낮다(찡그림이 아니라 집중).
-          // 바깥쪽이 처지면 슬픔 표정으로 읽히므로 절대 반대로 하지 않는다.
-          final inward = dx < 0 ? 1 : -1;
-          canvas.drawLine(
-            Offset(eye.dx - r * 0.15 * inward, eye.dy - r * 0.26),
-            Offset(eye.dx + r * 0.15 * inward, eye.dy - r * 0.17),
-            ink,
-          );
-        }
-      }
-    }
-
-    // 코와 입
-    final noseY = center.dy + r * 0.24;
-    canvas.drawCircle(
-      Offset(center.dx, noseY),
-      r * 0.07,
-      Paint()..color = const Color(0xFFE79FA6),
+  Widget build(BuildContext context) {
+    // ponytail: mood는 받아서 유지만 한다. 공급받은 cat.riv에는
+    // happy/sad/focused 같은 기분 상태가 없어(Idle, Blink 애니메이션뿐)
+    // 지금은 표정을 그릴 수 없다. 색 필터나 회전으로 흉내내면 어색해 보이므로
+    // 하지 않는다 — 기분을 담은 .riv가 새로 오면 여기서 상태를 골라 재생한다.
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Center(
+        child: SizedBox(
+          width: size * _scale,
+          height: size * _scale,
+          child: const RiveAnimation.asset(
+            'assets/cat.riv',
+            artboard: 'Cat',
+            // 상태 머신 대신 애니메이션을 직접 재생한다: 상태 머신은 포인터
+            // 좌표로 눈동자를 조준하는데, 폰엔 마우스가 없어 좌표를 안 주면
+            // 구석을 응시한 채 멈춰 보인다. Idle을 기본으로 깔고 Blink를
+            // 얹어 자연스럽게 깜빡이게 한다.
+            animations: ['Idle', 'Blink'],
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
     );
-    final mouthDip = mood == CatMood.sad ? -r * 0.12 : r * 0.14;
-    canvas.drawPath(
-      Path()
-        ..moveTo(center.dx - r * 0.2, noseY + r * 0.1)
-        ..quadraticBezierTo(
-            center.dx, noseY + r * 0.1 + mouthDip, center.dx + r * 0.2, noseY + r * 0.1),
-      ink,
-    );
-
-    // 수염
-    for (final side in [-1.0, 1.0]) {
-      for (final dy in [-0.08, 0.06]) {
-        canvas.drawLine(
-          Offset(center.dx + side * r * 0.32, noseY + r * dy),
-          Offset(center.dx + side * r * 0.82, noseY + r * (dy - 0.06)),
-          ink,
-        );
-      }
-    }
   }
-
-  @override
-  bool shouldRepaint(_CatPainter old) =>
-      old.stage != stage || old.mood != mood;
 }
