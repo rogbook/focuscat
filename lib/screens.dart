@@ -92,6 +92,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   late final DateTime _startedAt = DateTime.now();
   Timer? _ticker;
   Timer? _graceTimer;
+  bool _isFinishing = false;
 
   @override
   void initState() {
@@ -127,6 +128,8 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _finish() async {
+    if (_isFinishing) return;
+    _isFinishing = true;
     _ticker?.cancel();
     _graceTimer?.cancel();
     await appState.recordSession(
