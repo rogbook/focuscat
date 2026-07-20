@@ -42,9 +42,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   size: 220,
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Text(
+                    done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
                 const Spacer(),
                 Wrap(
@@ -208,28 +212,36 @@ class ResultScreen extends StatelessWidget {
     };
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CatView(
-              stage: appState.stage,
-              mood: success ? CatMood.happy : CatMood.sad,
-              size: 220,
-            ),
-            const SizedBox(height: 24),
-            Text(message, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(
-              '누적 집중 ${(appState.totalSuccessSeconds / 60).floor()}분',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 32),
-            FilledButton(
-              onPressed: () =>
-                  Navigator.of(context).popUntil((route) => route.isFirst),
-              child: const Text('돌아가기'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CatView(
+                stage: appState.stage,
+                mood: success ? CatMood.happy : CatMood.sad,
+                size: 220,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '누적 집중 ${(appState.totalSuccessSeconds / 60).floor()}분',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 32),
+              FilledButton(
+                onPressed: () =>
+                    Navigator.of(context).popUntil((route) => route.isFirst),
+                child: const Text('돌아가기'),
+              ),
+            ],
+          ),
         ),
       ),
     );

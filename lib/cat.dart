@@ -48,8 +48,8 @@ class _CatPainter extends CustomPainter {
   Color get _furColor => switch (mood) {
         CatMood.happy => const Color(0xFFFFC9A9),
         CatMood.sad => const Color(0xFFC9C4D6),
-        // 집중 중엔 차분한 민트 톤으로 눈에 띄게 구분한다.
-        CatMood.focused => const Color(0xFFD9EAD3),
+        // 집중 중엔 다른 색상군으로 바꾸지 않고, 같은 웜톤 안에서 살짝 진하게만 구분한다.
+        CatMood.focused => const Color(0xFFF0C9A0),
         CatMood.idle => const Color(0xFFF5D5B8),
       };
 
@@ -107,11 +107,12 @@ class _CatPainter extends CustomPainter {
           Paint()..color = _inkColor,
         );
         if (mood == CatMood.focused) {
-          // 살짝 내려온 눈썹 — 편안하게 몰입한 표정. 안쪽이 바깥쪽보다 낮다.
+          // 몰입한 눈썹 — 바깥쪽이 높고 안쪽이 살짝 낮다(찡그림이 아니라 집중).
+          // 바깥쪽이 처지면 슬픔 표정으로 읽히므로 절대 반대로 하지 않는다.
           final inward = dx < 0 ? 1 : -1;
           canvas.drawLine(
-            Offset(eye.dx - r * 0.15 * inward, eye.dy - r * 0.2),
-            Offset(eye.dx + r * 0.15 * inward, eye.dy - r * 0.28),
+            Offset(eye.dx - r * 0.15 * inward, eye.dy - r * 0.26),
+            Offset(eye.dx + r * 0.15 * inward, eye.dy - r * 0.17),
             ink,
           );
         }
