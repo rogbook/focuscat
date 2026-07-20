@@ -36,6 +36,8 @@ class _CatPainter extends CustomPainter {
   final CatStage stage;
   final CatMood mood;
 
+  static const _inkColor = Color(0xFF4A4453);
+
   /// 성장할수록 몸집이 커진다.
   double get _scale => switch (stage) {
         CatStage.baby => 0.7,
@@ -46,7 +48,9 @@ class _CatPainter extends CustomPainter {
   Color get _furColor => switch (mood) {
         CatMood.happy => const Color(0xFFFFC9A9),
         CatMood.sad => const Color(0xFFC9C4D6),
-        _ => const Color(0xFFF5D5B8),
+        // 집중 중엔 차분한 민트 톤으로 눈에 띄게 구분한다.
+        CatMood.focused => const Color(0xFFD9EAD3),
+        CatMood.idle => const Color(0xFFF5D5B8),
       };
 
   @override
@@ -55,7 +59,7 @@ class _CatPainter extends CustomPainter {
     final r = size.width / 2 * _scale;
     final fur = Paint()..color = _furColor;
     final ink = Paint()
-      ..color = const Color(0xFF4A4453)
+      ..color = _inkColor
       ..strokeWidth = r * 0.06
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
@@ -100,8 +104,17 @@ class _CatPainter extends CustomPainter {
         final h = mood == CatMood.focused ? r * 0.07 : r * 0.15;
         canvas.drawOval(
           Rect.fromCenter(center: eye, width: r * 0.24, height: h * 2),
-          Paint()..color = const Color(0xFF4A4453),
+          Paint()..color = _inkColor,
         );
+        if (mood == CatMood.focused) {
+          // 살짝 내려온 눈썹 — 편안하게 몰입한 표정. 안쪽이 바깥쪽보다 낮다.
+          final inward = dx < 0 ? 1 : -1;
+          canvas.drawLine(
+            Offset(eye.dx - r * 0.15 * inward, eye.dy - r * 0.2),
+            Offset(eye.dx + r * 0.15 * inward, eye.dy - r * 0.28),
+            ink,
+          );
+        }
       }
     }
 
