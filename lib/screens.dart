@@ -117,6 +117,8 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
         _timer.leaveApp();
         _finish();
       } else {
+        // hidden → paused 처럼 연속으로 올 수 있어, 이전 유예 타이머를 먼저 끊는다.
+        _graceTimer?.cancel();
         _graceTimer = Timer(const Duration(seconds: kGraceSeconds), () {
           if (!_timer.isFinished) {
             _timer.leaveApp();
