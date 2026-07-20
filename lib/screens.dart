@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Spacer(),
                 Wrap(
+                  alignment: WrapAlignment.center,
                   spacing: 8,
                   children: [
                     for (final m in _choices)
