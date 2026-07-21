@@ -32,51 +32,67 @@ class _HomeScreenState extends State<HomeScreen> {
           animation: appState,
           builder: (context, _) {
             final done = appState.todaySuccessCount;
-            // 폭을 화면 끝까지 늘려야 자식들이 진짜 화면 가운데에 온다.
-            // 안 그러면 Column이 가장 넓은 자식(칩 줄)만큼만 잡고 왼쪽에 붙는다.
-            return SizedBox(
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            // 고양이는 화면 한가운데, 시간 선택과 시작 버튼은 아래에 붙인다.
+            // 한 Column에 Spacer로 나누면 아래쪽 덩어리 높이만큼 고양이가
+            // 위로 밀려 올라가서, 겹쳐 쌓는 Stack으로 서로 떼어 놓는다.
+            // expand가 없으면 Stack이 Positioned만 가진 채 최소 크기로 쪼그라든다.
+            return SizedBox.expand(
+              child: Stack(
                 children: [
-                  const Spacer(),
-                  CatView(
-                    stage: appState.stage,
-                    mood: done > 0 ? CatMood.happy : CatMood.idle,
-                    size: 220,
-                  ),
-                  const SizedBox(height: 12),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Text(
-                      done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                  const Spacer(),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: [
-                      for (final m in _choices)
-                        ChoiceChip(
-                          label: Text('$m분'),
-                          selected: _minutes == m,
-                          onSelected: (_) => setState(() => _minutes = m),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton(
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => FocusScreen(minutes: _minutes),
+                  Positioned.fill(
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CatView(
+                            stage: appState.stage,
+                            mood: done > 0 ? CatMood.happy : CatMood.idle,
+                            size: 220,
+                          ),
+                          const SizedBox(height: 12),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Text(
+                              done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: const Text('집중 시작'),
                   ),
-                  const SizedBox(height: 48),
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 48,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 8,
+                          children: [
+                            for (final m in _choices)
+                              ChoiceChip(
+                                label: Text('$m분'),
+                                selected: _minutes == m,
+                                onSelected: (_) => setState(() => _minutes = m),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        FilledButton(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => FocusScreen(minutes: _minutes),
+                            ),
+                          ),
+                          child: const Text('집중 시작'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             );

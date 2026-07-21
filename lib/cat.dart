@@ -59,12 +59,18 @@ class CatView extends StatelessWidget {
   final CatMood mood;
   final double size;
 
+  /// cat.riv 아트보드 안에서 고양이가 실제로 차지하는 비율(세로 기준).
+  /// 배경을 지워도 아트보드의 빈 여백은 남아 BoxFit.contain이 그 여백까지
+  /// 맞추기 때문에, 이만큼 키워야 [size]가 눈에 보이는 고양이 크기가 된다.
+  /// 시뮬레이터 화면에서 재서 얻은 값 — 여백 없는 .riv로 바꾸면 1.0으로.
+  static const _artFill = 0.65;
+
   /// 성장할수록 몸집이 커진다. 옛 CustomPainter와 같은 비율.
   double get _scale => switch (stage) {
-        CatStage.baby => 0.7,
-        CatStage.teen => 0.85,
-        CatStage.adult => 1.0,
-      };
+    CatStage.baby => 0.7,
+    CatStage.teen => 0.85,
+    CatStage.adult => 1.0,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +83,8 @@ class CatView extends StatelessWidget {
       height: size,
       child: Center(
         child: SizedBox(
-          width: size * _scale,
-          height: size * _scale,
+          width: size * _scale / _artFill,
+          height: size * _scale / _artFill,
           child: RiveAnimation.asset(
             'assets/cat.riv',
             artboard: 'Cat',
