@@ -32,48 +32,53 @@ class _HomeScreenState extends State<HomeScreen> {
           animation: appState,
           builder: (context, _) {
             final done = appState.todaySuccessCount;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                CatView(
-                  stage: appState.stage,
-                  mood: done > 0 ? CatMood.happy : CatMood.idle,
-                  size: 220,
-                ),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Text(
-                    done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.titleMedium,
+            // 폭을 화면 끝까지 늘려야 자식들이 진짜 화면 가운데에 온다.
+            // 안 그러면 Column이 가장 넓은 자식(칩 줄)만큼만 잡고 왼쪽에 붙는다.
+            return SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  CatView(
+                    stage: appState.stage,
+                    mood: done > 0 ? CatMood.happy : CatMood.idle,
+                    size: 220,
                   ),
-                ),
-                const Spacer(),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 8,
-                  children: [
-                    for (final m in _choices)
-                      ChoiceChip(
-                        label: Text('$m분'),
-                        selected: _minutes == m,
-                        onSelected: (_) => setState(() => _minutes = m),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                FilledButton(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => FocusScreen(minutes: _minutes),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Text(
+                      done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
-                  child: const Text('집중 시작'),
-                ),
-                const SizedBox(height: 48),
-              ],
+                  const Spacer(),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 8,
+                    children: [
+                      for (final m in _choices)
+                        ChoiceChip(
+                          label: Text('$m분'),
+                          selected: _minutes == m,
+                          onSelected: (_) => setState(() => _minutes = m),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  FilledButton(
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => FocusScreen(minutes: _minutes),
+                      ),
+                    ),
+                    child: const Text('집중 시작'),
+                  ),
+                  const SizedBox(height: 48),
+                ],
+              ),
             );
           },
         ),
@@ -117,7 +122,8 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
       _graceTimer = null;
       return;
     }
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.hidden) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
       if (kGraceSeconds == 0) {
         _timer.leaveApp();
         _finish();
@@ -148,9 +154,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     );
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) => ResultScreen(outcome: _timer.outcome!),
-      ),
+      MaterialPageRoute(builder: (_) => ResultScreen(outcome: _timer.outcome!)),
     );
   }
 
@@ -166,31 +170,34 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            CatView(stage: appState.stage, mood: CatMood.focused, size: 200),
-            const SizedBox(height: 32),
-            Text(
-              _mmss(_timer.remainingSeconds),
-              style: Theme.of(context).textTheme.displayLarge,
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: 240,
-              child: LinearProgressIndicator(value: _timer.progress),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                _timer.abandon();
-                _finish();
-              },
-              child: const Text('포기하기'),
-            ),
-            const SizedBox(height: 48),
-          ],
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              CatView(stage: appState.stage, mood: CatMood.focused, size: 200),
+              const SizedBox(height: 32),
+              Text(
+                _mmss(_timer.remainingSeconds),
+                style: Theme.of(context).textTheme.displayLarge,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: 240,
+                child: LinearProgressIndicator(value: _timer.progress),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () {
+                  _timer.abandon();
+                  _finish();
+                },
+                child: const Text('포기하기'),
+              ),
+              const SizedBox(height: 48),
+            ],
+          ),
         ),
       ),
     );
@@ -215,33 +222,36 @@ class ResultScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CatView(
-                stage: appState.stage,
-                mood: success ? CatMood.happy : CatMood.sad,
-                size: 220,
-              ),
-              const SizedBox(height: 24),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '누적 집중 ${(appState.totalSuccessSeconds / 60).floor()}분',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 32),
-              FilledButton(
-                onPressed: () =>
-                    Navigator.of(context).popUntil((route) => route.isFirst),
-                child: const Text('돌아가기'),
-              ),
-            ],
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CatView(
+                  stage: appState.stage,
+                  mood: success ? CatMood.happy : CatMood.sad,
+                  size: 220,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '누적 집중 ${(appState.totalSuccessSeconds / 60).floor()}분',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 32),
+                FilledButton(
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((route) => route.isFirst),
+                  child: const Text('돌아가기'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
