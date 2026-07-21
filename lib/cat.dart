@@ -1,7 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
+// LinearGradient는 flutter/material 쪽과 이름이 겹쳐 접두사가 필요하다.
+import 'package:rive/rive.dart' as rive show LinearGradient;
 
 import 'app_state.dart';
+
+/// cat.riv에 박혀 있는 배경 사각형을 지운다.
+///
+/// 배경은 두 겹이다: 주황 그라디언트 `BG`와 그 위의 빨간 `HitArea`
+/// (원래 탭 영역용인데 투명하게 안 만들고 내보낸 듯하다). 아트보드 자체
+/// 채우기까지 셋 다 끈다.
+///
+/// rive 0.13.20엔 컴포넌트를 지우는 API가 없고, Shape.opacity = 0 과
+/// Fill.isVisible = false 는 화면에 반영되지 않는다(직접 확인).
+///
+/// 아래 네 가지를 한꺼번에 건다. 하나씩 빼며 실제 화면으로 확인해 봤는데
+/// 어느 하나만으로는 배경이 다 지워지지 않았다 — 채우기 종류마다 먹히는
+/// 경로가 다르다. 이건 이 .riv 하나를 위한 임시방편이므로 줄이려 애쓰지 말고,
+/// 배경 없는 .riv를 새로 받으면 이 함수째로 지우는 게 맞다.
+void _hideBg(Artboard artboard) {
+  final fills = [
+    ...?artboard.component<Shape>('BG')?.fills,
+    ...?artboard.component<Shape>('HitArea')?.fills,
+    ...artboard.fills,
+  ];
+  const transparent = Color(0x00000000);
+  for (final fill in fills) {
+    fill.paint
+      ..blendMode = BlendMode.dst
+      ..color = transparent
+      ..shader = null;
+    final mutator = fill.paintMutator;
+    if (mutator is SolidColor) mutator.color = transparent;
+    if (mutator is rive.LinearGradient) {
+      for (final stop in mutator.gradientStops) {
+        stop.color = transparent;
+      }
+    }
+  }
+}
 
 /// 고양이 표정.
 enum CatMood { idle, focused, happy, sad }
@@ -42,15 +79,16 @@ class CatView extends StatelessWidget {
         child: SizedBox(
           width: size * _scale,
           height: size * _scale,
-          child: const RiveAnimation.asset(
+          child: RiveAnimation.asset(
             'assets/cat.riv',
             artboard: 'Cat',
             // 상태 머신 대신 애니메이션을 직접 재생한다: 상태 머신은 포인터
             // 좌표로 눈동자를 조준하는데, 폰엔 마우스가 없어 좌표를 안 주면
             // 구석을 응시한 채 멈춰 보인다. Idle을 기본으로 깔고 Blink를
             // 얹어 자연스럽게 깜빡이게 한다.
-            animations: ['Idle', 'Blink'],
+            animations: const ['Idle', 'Blink'],
             fit: BoxFit.contain,
+            onInit: _hideBg,
           ),
         ),
       ),
