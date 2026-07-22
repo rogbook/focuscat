@@ -14,17 +14,15 @@ class Ads {
 
   static final instance = Ads._();
 
-  /// 아직 구글 공식 테스트 광고 단위다.
+  /// 보상형 전면 광고 단위. iOS는 실제(focus-end), 안드로이드는 아직
+  /// 구글 테스트 ID다 — AdMob에서 안드로이드 앱에도 같은 형식의 단위를
+  /// 만들어 교체해야 안드로이드에서 수익이 발생한다.
   ///
-  /// 앱 ID는 실제 것으로 바꿨지만(Info.plist, AndroidManifest.xml) 광고 단위는
-  /// 아직 발급 전이다. AdMob에서 각 앱에 '보상형 전면 광고' 단위를 만들고
-  /// 여기 슬래시(/) 형태의 ID로 교체해야 수익이 발생한다.
-  ///
-  /// 반대로 실제 단위 ID를 넣은 채 개발하며 광고를 반복해 띄우면 무효 트래픽으로
-  /// 계정이 정지될 수 있다. 개발 중에는 테스트 ID를 쓴다.
+  /// 실제 단위 ID로 개발하며 광고를 반복해 띄우면 무효 트래픽으로 계정이
+  /// 정지될 수 있다. 기기에서 시험할 때는 AdMob의 테스트 기기로 등록하고 쓴다.
   static String get _unitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5354046379'
-      : 'ca-app-pub-3940256099942544/6978759866';
+      : 'ca-app-pub-8879427346433924/3200981586';
 
   RewardedInterstitialAd? _ad;
   bool _loading = false;
