@@ -343,6 +343,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   Timer? _graceTimer;
   bool _isFinishing = false;
   final _music = AudioPlayer();
+  bool _musicDisposed = false;
   bool _muted = false;
 
   @override
@@ -367,7 +368,11 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   Future<void> _startMusic() async {
     try {
       await _music.setAsset('assets/lofi.mp3');
+      // 음원을 읽는 동안 세션이 끝났을 수 있다. 그대로 재생하면 화면이
+      // 사라진 뒤에도 음악만 남는다.
+      if (_musicDisposed) return;
       await _music.setLoopMode(LoopMode.one);
+      if (_musicDisposed) return;
       _music.play(); // 곡이 끝날 때까지 기다리므로 await 하지 않는다
     } catch (e) {
       debugPrint('MUSIC failed: $e');
@@ -416,8 +421,17 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     _isFinishing = true;
     _ticker?.cancel();
     _graceTimer?.cancel();
-    _music.dispose();
+    _stopMusic();
     WakelockPlus.disable();
+  }
+
+  /// 배경음을 끈다. 끝나는 경로가 여럿이라(완료·포기·이탈·유령 정리) 두 번
+  /// 불릴 수 있어 한 번만 실제로 dispose 한다. 여기서 새는 순간 음악만
+  /// 앱보다 오래 살아남는다 — 실제로 그렇게 됐던 적이 있다.
+  void _stopMusic() {
+    if (_musicDisposed) return;
+    _musicDisposed = true;
+    _music.dispose();
   }
 
   Future<void> _finish() async {
@@ -443,8 +457,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     if (identical(FocusScreen._current, this)) FocusScreen._current = null;
     _ticker?.cancel();
     _graceTimer?.cancel();
-    // _abandonSilently가 이미 정리했으면 두 번 dispose 하지 않는다.
-    if (!_isFinishing) _music.dispose();
+    _stopMusic();
     WakelockPlus.disable();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
