@@ -59,6 +59,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- HTTPS 외에 암호화를 쓰지 않는다. 이 키가 없으면 업로드할 때마다
+	     수출 규정 질문에 답해야 한다. -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<!-- ATT 안내 문구. 이 키가 없으면 추적 동의를 요청하는 순간 앱이 죽는다. -->
 	<key>NSUserTrackingUsageDescription</key>
 	<string>관련성 높은 광고를 보여주기 위해 사용합니다. 거부해도 앱은 그대로 쓸 수 있습니다.</string>
