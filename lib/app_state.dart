@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 성장 임계값(초). 플레이 테스트로 조정한다.
@@ -88,6 +89,21 @@ class AppState extends ChangeNotifier {
       }
     }
     notifyListeners();
+    await _publishToWidget();
+  }
+
+  /// 홈 화면 위젯이 읽어갈 값을 App Group에 써 둔다.
+  /// 위젯이 없거나(안드로이드·테스트 환경) 실패해도 앱은 그대로 돌아가야 한다.
+  Future<void> _publishToWidget() async {
+    try {
+      await HomeWidget.setAppGroupId('group.com.rogbook.focuscat');
+      await HomeWidget.saveWidgetData<int>('todayCount', todaySuccessCount);
+      await HomeWidget.saveWidgetData<int>(
+        'totalMinutes',
+        totalSuccessSeconds ~/ 60,
+      );
+      await HomeWidget.updateWidget(iOSName: 'FocusCatWidget');
+    } catch (_) {}
   }
 
   Future<void> recordSession(FocusSession session) async {
@@ -103,6 +119,7 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> _save() async {
+    await _publishToWidget();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _key,
