@@ -8,9 +8,6 @@ import 'app_state.dart';
 import 'l10n/app_localizations.dart';
 import 'screens.dart';
 
-/// 위젯 탭으로 시작할 때 쓰는 집중 시간(분).
-const kWidgetStartMinutes = 25;
-
 final _navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -32,7 +29,8 @@ void _startFocusFrom(Uri? uri) {
   if (navigator == null) return;
   navigator.push(
     MaterialPageRoute(
-      builder: (_) => const FocusScreen(minutes: kWidgetStartMinutes),
+      // 마지막에 고른 시간으로 시작한다. 위젯에는 시간을 고를 자리가 없다.
+      builder: (_) => FocusScreen(minutes: appState.lastMinutes),
     ),
   );
 }

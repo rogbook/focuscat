@@ -15,8 +15,10 @@ private let teal = Color(red: 0x50 / 255, green: 0xC2 / 255, blue: 0xC9 / 255)
 
 struct CatEntry: TimelineEntry {
     let date: Date
-    let todayCount: Int
-    let totalMinutes: Int
+    /// 문구는 앱이 기기 언어로 만들어 App Group에 써 둔 것을 그대로 쓴다.
+    /// 위젯이 번역 파일을 따로 갖지 않아도 앱의 언어를 그대로 따라간다.
+    let message: String
+    let total: String
 }
 
 struct Provider: TimelineProvider {
@@ -24,13 +26,13 @@ struct Provider: TimelineProvider {
         let defaults = UserDefaults(suiteName: appGroup)
         return CatEntry(
             date: Date(),
-            todayCount: defaults?.integer(forKey: "todayCount") ?? 0,
-            totalMinutes: defaults?.integer(forKey: "totalMinutes") ?? 0
+            message: defaults?.string(forKey: "message") ?? "",
+            total: defaults?.string(forKey: "total") ?? ""
         )
     }
 
     func placeholder(in context: Context) -> CatEntry {
-        CatEntry(date: Date(), todayCount: 0, totalMinutes: 0)
+        CatEntry(date: Date(), message: "", total: "")
     }
 
     func getSnapshot(in context: Context, completion: @escaping (CatEntry) -> Void) {
@@ -52,20 +54,16 @@ struct Provider: TimelineProvider {
 struct FocusCatWidgetEntryView: View {
     var entry: CatEntry
 
-    private var message: String {
-        entry.todayCount > 0 ? "오늘 \(entry.todayCount)번 집중" : "오늘 첫 집중 대기 중"
-    }
-
     var body: some View {
         VStack(spacing: 6) {
             Image("Cat")
                 .resizable()
                 .scaledToFit()
                 .frame(maxHeight: 62)
-            Text(message)
+            Text(entry.message)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.primary)
-            Text("누적 \(entry.totalMinutes)분")
+            Text(entry.total)
                 .font(.system(size: 11))
                 .foregroundStyle(teal)
         }
@@ -99,6 +97,6 @@ struct FocusCatWidget: Widget {
 #Preview(as: .systemSmall) {
     FocusCatWidget()
 } timeline: {
-    CatEntry(date: .now, todayCount: 0, totalMinutes: 0)
-    CatEntry(date: .now, todayCount: 3, totalMinutes: 75)
+    CatEntry(date: .now, message: "오늘 첫 집중 대기 중", total: "누적 집중 0분")
+    CatEntry(date: .now, message: "오늘 3번 집중했어요", total: "누적 집중 75분")
 }

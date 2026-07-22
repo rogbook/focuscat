@@ -122,11 +122,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _minutes = 25;
   static const _choices = [15, 25, 45, 60];
 
-  /// 사용자가 직접 고른 시간. 고르기 전엔 null이라 '직접' 칩만 보인다.
-  int? _custom;
+  /// 지난번에 고른 시간에서 이어서 시작한다.
+  late int _minutes = appState.lastMinutes;
+
+  /// 정해둔 시간 밖의 값일 때만 '직접' 칩에 그 값이 달린다.
+  late int? _custom = _choices.contains(_minutes) ? null : _minutes;
 
   static const _minCustom = 1;
   static const _maxCustom = 180;
@@ -187,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _custom = _choices.contains(result) ? null : result;
       _minutes = result;
     });
+    await appState.setLastMinutes(result);
   }
 
   @override
@@ -242,7 +245,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       : Colors.black87,
                                   fontWeight: FontWeight.w600,
                                 ),
-                                onSelected: (_) => setState(() => _minutes = m),
+                                onSelected: (_) {
+                                  setState(() => _minutes = m);
+                                  appState.setLastMinutes(m);
+                                },
                               ),
                             // 정해둔 시간 밖을 고르는 칩. 고르고 나면 그 시간을
                             // 그대로 라벨에 달아 다시 누르면 바꿀 수 있게 한다.

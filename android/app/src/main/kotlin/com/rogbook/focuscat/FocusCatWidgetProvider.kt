@@ -19,16 +19,15 @@ class FocusCatWidgetProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: android.content.SharedPreferences,
     ) {
-        val today = widgetData.getInt("todayCount", 0)
-        val minutes = widgetData.getInt("totalMinutes", 0)
+        // 문구는 앱이 기기 언어로 만들어 둔 것을 그대로 쓴다 — 위젯이 번역
+        // 파일을 따로 갖지 않아도 앱의 언어를 그대로 따라간다.
+        val message = widgetData.getString("message", "") ?: ""
+        val total = widgetData.getString("total", "") ?: ""
 
         appWidgetIds.forEach { id ->
             val views = RemoteViews(context.packageName, R.layout.focuscat_widget).apply {
-                setTextViewText(
-                    R.id.message,
-                    if (today > 0) "오늘 ${today}번 집중" else "오늘 첫 집중 대기 중",
-                )
-                setTextViewText(R.id.total, "누적 ${minutes}분")
+                setTextViewText(R.id.message, message)
+                setTextViewText(R.id.total, total)
                 // 탭하면 앱이 열리면서 곧바로 집중이 시작된다.
                 setOnClickPendingIntent(
                     R.id.root,
