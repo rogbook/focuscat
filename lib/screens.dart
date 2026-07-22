@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart' show CupertinoPicker;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -119,6 +120,66 @@ class _HomeScreenState extends State<HomeScreen> {
   int _minutes = 25;
   static const _choices = [15, 25, 45, 60];
 
+  /// 사용자가 직접 고른 시간. 고르기 전엔 null이라 '직접' 칩만 보인다.
+  int? _custom;
+
+  static const _minCustom = 1;
+  static const _maxCustom = 180;
+
+  Future<void> _pickCustom() async {
+    var picked = _custom ?? _minutes;
+    final result = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '집중 시간 직접 설정',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 180,
+                child: CupertinoPicker(
+                  itemExtent: 40,
+                  scrollController: FixedExtentScrollController(
+                    initialItem: picked - _minCustom,
+                  ),
+                  onSelectedItemChanged: (i) => picked = i + _minCustom,
+                  children: [
+                    for (var m = _minCustom; m <= _maxCustom; m++)
+                      Center(child: Text('$m분')),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(sheetContext, picked),
+                  child: const Text('이 시간으로'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (result == null) return;
+    setState(() {
+      // 이미 있는 칩과 같은 시간을 골랐으면 그 칩을 고른 것으로 친다.
+      // 안 그러면 같은 '15분' 칩이 둘 다 선택된 것처럼 보인다.
+      _custom = _choices.contains(result) ? null : result;
+      _minutes = result;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,6 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Wrap(
                           alignment: WrapAlignment.center,
                           spacing: 8,
+                          runSpacing: 8,
                           children: [
                             for (final m in _choices)
                               ChoiceChip(
@@ -172,6 +234,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 onSelected: (_) => setState(() => _minutes = m),
                               ),
+                            // 정해둔 시간 밖을 고르는 칩. 고르고 나면 그 시간을
+                            // 그대로 라벨에 달아 다시 누르면 바꿀 수 있게 한다.
+                            ChoiceChip(
+                              label: Text(_custom == null ? '직접' : '$_custom분'),
+                              selected: _custom != null && _minutes == _custom,
+                              labelStyle: TextStyle(
+                                color: _custom != null && _minutes == _custom
+                                    ? Colors.white
+                                    : Colors.black87,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              onSelected: (_) => _pickCustom(),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 20),
