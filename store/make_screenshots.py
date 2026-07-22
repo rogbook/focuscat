@@ -30,8 +30,78 @@ SHOTS = {
     ],
 }
 
+# 마지막 장 — 기기 화면 없이 글로만 정리하는 안내문.
+# 스크린샷을 넘겨보다 멈춘 사람에게 "무슨 앱인지" 한 번에 알려준다.
+NOTICE = {
+    "ko": (
+        "이런 앱입니다",
+        [
+            "시간을 고르면 고양이가 옆에서 기다립니다",
+            "앱을 벗어나면 집중이 끊깁니다 (25초 유예)",
+            "집중하는 동안에는 광고가 나오지 않습니다",
+            "lofi 배경음이 흐르고, 언제든 끌 수 있습니다",
+            "1분부터 3시간까지 원하는 시간으로",
+            "쌓인 시간만큼 고양이가 자랍니다",
+            "계정 · 로그인 · 결제 없음. 무료입니다",
+        ],
+    ),
+    "en": (
+        "What this app is",
+        [
+            "Pick a length — your cat waits with you",
+            "Leave the app and focus breaks (25s grace)",
+            "No ads while you are focusing",
+            "Lofi plays in the background, mute it anytime",
+            "Any length from 1 minute to 3 hours",
+            "Your cat grows with the time you build up",
+            "No account, no sign-in, no purchases. Free",
+        ],
+    ),
+}
+
 # (이름, 캔버스 크기) — App Store 6.9인치, Google Play 폰
 TARGETS = [("appstore", (1320, 2868)), ("play", (1080, 2340))]
+
+
+def compose_notice(lang, size):
+    W, H = size
+    canvas = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(canvas)
+
+    title, lines = NOTICE[lang]
+
+    cap_h = int(H * 0.17)
+    d.rectangle([0, 0, W, cap_h], fill=TEAL)
+    tf = ImageFont.truetype(FONT, int(W * 0.058), index=2)
+    tw = d.textlength(title, font=tf)
+    d.text(((W - tw) / 2, (cap_h - int(W * 0.07)) / 2), title, font=tf,
+           fill=(255, 255, 255))
+
+    # 흰 카드 하나에 항목을 담는다 — 앱 화면의 카드와 같은 모양
+    m = int(W * 0.08)
+    top = cap_h + int(H * 0.05)
+    bottom = H - int(H * 0.16)
+    d.rounded_rectangle([m, top, W - m, bottom], int(W * 0.05), fill=(255, 255, 255))
+
+    bf = ImageFont.truetype(FONT, int(W * 0.033), index=1)
+    pad = int(H * 0.045)
+    y = top + pad
+    step = (bottom - top - pad * 2) / (len(lines) - 1)
+    for line in lines:
+        d.ellipse(
+            [m + int(W * 0.07), y + int(W * 0.014),
+             m + int(W * 0.085), y + int(W * 0.029)],
+            fill=TEAL,
+        )
+        d.text((m + int(W * 0.115), y), line, font=bf, fill=INK)
+        y += step
+
+    # 아래쪽에 고양이 한 마리
+    cat = Image.open("assets/icon/app_icon_foreground.png").convert("RGBA")
+    ch = int(H * 0.11)
+    cat.thumbnail((ch, ch), Image.LANCZOS)
+    canvas.paste(cat, ((W - cat.width) // 2, bottom + int(H * 0.015)), cat)
+    return canvas
 
 
 def compose(shot_path, caption, size):
@@ -98,4 +168,5 @@ for lang, items in SHOTS.items():
         os.makedirs(d, exist_ok=True)
         for i, (path, caption) in enumerate(items, 1):
             compose(path, caption, size).save(f"{d}/{i:02d}.png")
+        compose_notice(lang, size).save(f"{d}/{len(items) + 1:02d}.png")
 print("done")
