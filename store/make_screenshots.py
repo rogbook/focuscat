@@ -59,8 +59,14 @@ NOTICE = {
     ),
 }
 
-# (이름, 캔버스 크기) — App Store 6.9인치, Google Play 폰
-TARGETS = [("appstore", (1320, 2868)), ("play", (1080, 2340))]
+# (이름, 캔버스 크기)
+# App Store Connect는 아이폰 슬롯마다 정해진 크기만 받는다. 6.5인치가
+# 가장 넓게 쓰이므로 그것부터 채우고, 6.9인치 슬롯이 따로 뜨면 그쪽을 쓴다.
+TARGETS = [
+    ("appstore65", (1284, 2778)),
+    ("appstore69", (1320, 2868)),
+    ("play", (1080, 2340)),
+]
 
 
 def compose_notice(lang, size):

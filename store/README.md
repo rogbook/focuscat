@@ -1,7 +1,10 @@
 # 스토어 등록 자료
 
 - `listing_ko.md` · `listing_en.md` — 앱 이름, 설명, 키워드
-- `screenshots/appstore/{ko,en}/` — 1320×2868 (iPhone 6.9인치), 각 4장
+- `screenshots/appstore65/{ko,en}/` — 1284×2778 (iPhone 6.5인치), 각 4장
+  App Store Connect가 iPhone 슬롯에서 요구하는 크기. 이걸 올린다.
+- `screenshots/appstore69/{ko,en}/` — 1320×2868 (iPhone 6.9인치), 각 4장
+  6.9인치 슬롯이 따로 뜰 때 쓴다.
 - `screenshots/play/{ko,en}/` — 1080×2340 (Google Play 폰), 각 4장
 
 위젯을 올린 홈 화면 장면은 없다. 시뮬레이터 위젯 갤러리가 비어 있어
