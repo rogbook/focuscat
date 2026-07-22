@@ -1,12 +1,7 @@
 import 'dart:convert';
 
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'l10n/app_localizations.dart';
 
 /// 성장 임계값(초). 플레이 테스트로 조정한다.
 const int kTeenSeconds = 5 * 3600;
@@ -98,7 +93,6 @@ class AppState extends ChangeNotifier {
       }
     }
     notifyListeners();
-    await _publishToWidget();
   }
 
   Future<void> setLastMinutes(int minutes) async {
@@ -106,44 +100,6 @@ class AppState extends ChangeNotifier {
     lastMinutes = minutes;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_minutesKey, minutes);
-  }
-
-  /// 위젯에 보여줄 문구를 기기 언어로 만든다.
-  ///
-  /// 위젯(Swift·Kotlin)은 번역 파일을 따로 갖지 않고 여기서 만든 문장을 그대로
-  /// 표시한다. 그래야 앱에 언어가 하나 늘 때 위젯이 저절로 따라온다.
-  /// 대신 언어를 바꾼 뒤 앱을 한 번도 안 열면 위젯은 옛 언어로 남는다.
-  Future<AppLocalizations> _localizations() {
-    for (final device in PlatformDispatcher.instance.locales) {
-      for (final supported in AppLocalizations.supportedLocales) {
-        if (supported.languageCode == device.languageCode) {
-          return AppLocalizations.delegate.load(supported);
-        }
-      }
-    }
-    return AppLocalizations.delegate.load(const Locale('en'));
-  }
-
-  /// 홈 화면 위젯이 읽어갈 값을 App Group에 써 둔다.
-  /// 위젯이 없거나(안드로이드·테스트 환경) 실패해도 앱은 그대로 돌아가야 한다.
-  Future<void> _publishToWidget() async {
-    try {
-      final t = await _localizations();
-      final done = todaySuccessCount;
-      await HomeWidget.setAppGroupId('group.com.rogbook.focuscat');
-      await HomeWidget.saveWidgetData<String>(
-        'message',
-        done > 0 ? t.todayCount(done) : t.todayWaiting,
-      );
-      await HomeWidget.saveWidgetData<String>(
-        'total',
-        t.totalFocus(totalSuccessSeconds ~/ 60),
-      );
-      await HomeWidget.updateWidget(
-        iOSName: 'FocusCatWidget',
-        androidName: 'FocusCatWidgetProvider',
-      );
-    } catch (_) {}
   }
 
   Future<void> recordSession(FocusSession session) async {
@@ -159,7 +115,6 @@ class AppState extends ChangeNotifier {
   }
 
   Future<void> _save() async {
-    await _publishToWidget();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       _key,
