@@ -319,6 +319,17 @@ class _HomeScreenState extends State<HomeScreen> {
 class FocusScreen extends StatefulWidget {
   const FocusScreen({super.key, required this.minutes});
 
+  /// 지금 돌고 있는 집중 세션. 없으면 null.
+  ///
+  /// 화면 밖에서 세션을 알아야 하는 이유: 위젯 탭으로 앱에 다시 들어오는
+  /// 과정에서 화면이 홈으로 되돌아가도 이 State는 살아남아 타이머·배경음·
+  /// 화면 켜둠이 계속 돈다(실기기에서 두 세션이 겹쳐 도는 것으로 드러났다).
+  /// 그래서 새 세션이 시작될 때 남아 있던 옛 세션을 여기서 찾아 끊는다.
+  static _FocusScreenState? _current;
+
+  /// 지금 집중 세션이 돌고 있는지. 위젯 탭이 두 번째 세션을 만들지 않게 한다.
+  static bool get isRunning => _current != null;
+
   final int minutes;
 
   @override
@@ -342,6 +353,9 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
       setState(_timer.tick);
       if (_timer.isFinished) _finish();
     });
+    // 어떤 경로로든 세션은 하나만 돈다. 남아 있던 것이 있으면 먼저 끊는다.
+    FocusScreen._current?._abandonSilently();
+    FocusScreen._current = this;
     _startMusic();
     // 자동 잠금이 걸리면 앱이 백그라운드로 내려가 집중이 실패한다.
     // 폰을 내려놓고 집중하는 게 정상 사용이므로 이 화면에서만 화면을 켜둔다.
@@ -392,6 +406,20 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     }
   }
 
+  /// 화면 없이 조용히 끝낸다.
+  ///
+  /// 이 세션의 화면은 이미 사라졌을 수 있어 결과 화면으로 넘기지 않고,
+  /// 기록도 남기지 않는다. 사용자가 방금 시작한 새 세션이 진짜이고, 유령이
+  /// 된 이쪽은 사용자가 이미 끝난 줄 알고 있던 것이다.
+  void _abandonSilently() {
+    if (_isFinishing) return;
+    _isFinishing = true;
+    _ticker?.cancel();
+    _graceTimer?.cancel();
+    _music.dispose();
+    WakelockPlus.disable();
+  }
+
   Future<void> _finish() async {
     if (_isFinishing) return;
     _isFinishing = true;
@@ -412,9 +440,11 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    if (identical(FocusScreen._current, this)) FocusScreen._current = null;
     _ticker?.cancel();
     _graceTimer?.cancel();
-    _music.dispose();
+    // _abandonSilently가 이미 정리했으면 두 번 dispose 하지 않는다.
+    if (!_isFinishing) _music.dispose();
     WakelockPlus.disable();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();

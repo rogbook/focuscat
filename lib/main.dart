@@ -24,7 +24,11 @@ Future<void> main() async {
 /// 게다가 이 앱은 앱을 벗어나면 실패로 치므로, 위젯의 역할은
 /// "집중 화면까지 한 번에 데려다주는 것"까지다.
 void _startFocusFrom(Uri? uri) {
+  debugPrint('WIDGET uri=$uri running=${FocusScreen.isRunning}');
   if (uri?.host != 'start') return;
+  // 이미 집중 중이면 아무것도 하지 않는다. 위젯 탭으로 앱이 앞으로 나오는
+  // 것만으로 충분하고, 새로 띄우면 세션이 둘 겹쳐 돌아간다.
+  if (FocusScreen.isRunning) return;
   final navigator = _navigatorKey.currentState;
   if (navigator == null) return;
   navigator.push(
