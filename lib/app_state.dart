@@ -102,7 +102,10 @@ class AppState extends ChangeNotifier {
         'totalMinutes',
         totalSuccessSeconds ~/ 60,
       );
-      await HomeWidget.updateWidget(iOSName: 'FocusCatWidget');
+      await HomeWidget.updateWidget(
+        iOSName: 'FocusCatWidget',
+        androidName: 'FocusCatWidgetProvider',
+      );
     } catch (_) {}
   }
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_name">집중냥이</string>
+    <string name="widget_cat">고양이</string>
+    <string name="widget_empty">오늘 첫 집중 대기 중</string>
+</resources>
