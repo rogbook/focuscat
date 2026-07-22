@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 
 import 'app_state.dart';
 import 'cat.dart';
@@ -213,6 +214,8 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   Timer? _ticker;
   Timer? _graceTimer;
   bool _isFinishing = false;
+  final _music = AudioPlayer();
+  bool _muted = false;
 
   @override
   void initState() {
@@ -222,6 +225,19 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
       setState(_timer.tick);
       if (_timer.isFinished) _finish();
     });
+    _startMusic();
+  }
+
+  /// 집중하는 동안만 lofi를 반복 재생한다. 음원이 없거나 오디오 장치가
+  /// 없어도 집중 자체는 계속돼야 하므로 실패는 삼킨다.
+  Future<void> _startMusic() async {
+    try {
+      await _music.setAsset('assets/lofi.mp3');
+      await _music.setLoopMode(LoopMode.one);
+      _music.play(); // 곡이 끝날 때까지 기다리므로 await 하지 않는다
+    } catch (e) {
+      debugPrint('MUSIC failed: $e');
+    }
   }
 
   @override
@@ -272,6 +288,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   void dispose() {
     _ticker?.cancel();
     _graceTimer?.cancel();
+    _music.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -296,6 +313,17 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
               SizedBox(
                 width: 240,
                 child: LinearProgressIndicator(value: _timer.progress),
+              ),
+              const SizedBox(height: 24),
+              // 도서관처럼 소리를 낼 수 없는 곳도 있으니 끌 수 있어야 한다.
+              IconButton(
+                onPressed: () {
+                  setState(() => _muted = !_muted);
+                  _music.setVolume(_muted ? 0 : 1);
+                },
+                icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
+                color: kTeal,
+                tooltip: _muted ? '음악 켜기' : '음악 끄기',
               ),
               const Spacer(),
               TextButton(
