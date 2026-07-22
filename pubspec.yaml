@@ -40,6 +40,9 @@ dependencies:
   home_widget: ^0.9.3
   wakelock_plus: ^1.7.0
   google_mobile_ads: ^9.0.0
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +66,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # 다국어 코드(app_localizations.dart)를 lib/l10n/*.arb에서 생성한다.
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   assets:

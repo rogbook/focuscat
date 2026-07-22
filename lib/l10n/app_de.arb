@@ -1,0 +1,19 @@
+{
+  "@@locale": "de",
+  "appTitle": "FokusKatze",
+  "todayWaiting": "Warte auf deine erste Fokuszeit heute",
+  "todayCount": "{count, plural, =1{Heute einmal fokussiert} other{Heute {count}-mal fokussiert}}",
+  "startFocus": "Fokus starten",
+  "minutes": "{count} Min.",
+  "customChip": "Eigene Zeit",
+  "customTitle": "Eigene Fokuszeit festlegen",
+  "customConfirm": "Diese Zeit verwenden",
+  "giveUp": "Aufgeben",
+  "musicOn": "Musik einschalten",
+  "musicOff": "Musik ausschalten",
+  "resultSuccess": "Geschafft! Deine Katze ist stolz auf dich",
+  "resultAbandoned": "Kein Problem. Versuch es noch mal",
+  "resultLeftApp": "Dein Fokus wurde unterbrochen. Noch mal?",
+  "totalFocus": "Insgesamt {count} Min. fokussiert",
+  "back": "Zurück"
+}

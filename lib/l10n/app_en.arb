@@ -1,0 +1,40 @@
+{
+  "@@locale": "en",
+  "appTitle": "FocusCat",
+  "todayWaiting": "Waiting for today's first focus",
+  "todayCount": "{count, plural, =1{Focused once today} other{Focused {count} times today}}",
+  "@todayCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "startFocus": "Start focusing",
+  "minutes": "{count} min",
+  "@minutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "customChip": "Custom",
+  "customTitle": "Set your own focus time",
+  "customConfirm": "Use this time",
+  "giveUp": "Give up",
+  "musicOn": "Turn music on",
+  "musicOff": "Turn music off",
+  "resultSuccess": "Done! Your cat is proud of you",
+  "resultAbandoned": "It's okay. Try again next time",
+  "resultLeftApp": "Your focus was broken. Try again?",
+  "totalFocus": "{count} min focused in total",
+  "@totalFocus": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "back": "Back"
+}

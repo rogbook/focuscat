@@ -5,6 +5,7 @@ import 'package:home_widget/home_widget.dart';
 
 import 'ads.dart';
 import 'app_state.dart';
+import 'l10n/app_localizations.dart';
 import 'screens.dart';
 
 /// 위젯 탭으로 시작할 때 쓰는 집중 시간(분).
@@ -67,7 +68,9 @@ class _FocusCatAppState extends State<FocusCatApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: _navigatorKey,
-      title: '집중냥이',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

@@ -1,0 +1,19 @@
+{
+  "@@locale": "hi",
+  "appTitle": "फोकसकैट",
+  "todayWaiting": "आज के पहले फोकस का इंतज़ार",
+  "todayCount": "{count, plural, =1{आज एक बार फोकस किया} other{आज {count} बार फोकस किया}}",
+  "startFocus": "फोकस शुरू करें",
+  "minutes": "{count} मिनट",
+  "customChip": "अपना समय",
+  "customTitle": "अपना फोकस समय चुनें",
+  "customConfirm": "यही समय लें",
+  "giveUp": "छोड़ दें",
+  "musicOn": "संगीत चालू करें",
+  "musicOff": "संगीत बंद करें",
+  "resultSuccess": "पूरा हुआ! आपकी बिल्ली को गर्व है",
+  "resultAbandoned": "कोई बात नहीं। फिर कोशिश करें",
+  "resultLeftApp": "आपका फोकस टूट गया। फिर करें?",
+  "totalFocus": "कुल {count} मिनट फोकस",
+  "back": "वापस"
+}

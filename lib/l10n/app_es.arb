@@ -1,0 +1,19 @@
+{
+  "@@locale": "es",
+  "appTitle": "GatoFoco",
+  "todayWaiting": "Esperando tu primer enfoque de hoy",
+  "todayCount": "{count, plural, =1{Te concentraste una vez hoy} other{Te concentraste {count} veces hoy}}",
+  "startFocus": "Empezar a concentrarse",
+  "minutes": "{count} min",
+  "customChip": "Personalizado",
+  "customTitle": "Elige tu propio tiempo",
+  "customConfirm": "Usar este tiempo",
+  "giveUp": "Rendirse",
+  "musicOn": "Activar música",
+  "musicOff": "Silenciar música",
+  "resultSuccess": "¡Listo! Tu gato está orgulloso",
+  "resultAbandoned": "Está bien. Inténtalo de nuevo",
+  "resultLeftApp": "Se interrumpió tu enfoque. ¿Otra vez?",
+  "totalFocus": "{count} min concentrado en total",
+  "back": "Volver"
+}

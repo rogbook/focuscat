@@ -1,0 +1,19 @@
+{
+  "@@locale": "fr",
+  "appTitle": "ChatFocus",
+  "todayWaiting": "En attente de votre première session",
+  "todayCount": "{count, plural, =1{Vous vous êtes concentré une fois aujourd'hui} other{Vous vous êtes concentré {count} fois aujourd'hui}}",
+  "startFocus": "Commencer à se concentrer",
+  "minutes": "{count} min",
+  "customChip": "Personnalisé",
+  "customTitle": "Définir votre propre durée",
+  "customConfirm": "Utiliser cette durée",
+  "giveUp": "Abandonner",
+  "musicOn": "Activer la musique",
+  "musicOff": "Couper la musique",
+  "resultSuccess": "Terminé ! Votre chat est fier de vous",
+  "resultAbandoned": "Ce n'est rien. Réessayez plus tard",
+  "resultLeftApp": "Votre concentration a été interrompue. On réessaie ?",
+  "totalFocus": "{count} min de concentration au total",
+  "back": "Retour"
+}

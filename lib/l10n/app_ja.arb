@@ -1,0 +1,19 @@
+{
+  "@@locale": "ja",
+  "appTitle": "集中ねこ",
+  "todayWaiting": "今日はまだ集中していません",
+  "todayCount": "今日は{count}回集中しました",
+  "startFocus": "集中を始める",
+  "minutes": "{count}分",
+  "customChip": "カスタム",
+  "customTitle": "集中時間を自分で設定",
+  "customConfirm": "この時間にする",
+  "giveUp": "あきらめる",
+  "musicOn": "音楽をオンにする",
+  "musicOff": "音楽をオフにする",
+  "resultSuccess": "集中完了！ねこが誇らしげです",
+  "resultAbandoned": "大丈夫。また挑戦しましょう",
+  "resultLeftApp": "集中が途切れました。もう一度？",
+  "totalFocus": "合計{count}分集中",
+  "back": "戻る"
+}

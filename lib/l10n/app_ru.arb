@@ -1,0 +1,19 @@
+{
+  "@@locale": "ru",
+  "appTitle": "КотФокус",
+  "todayWaiting": "Ждём первую сессию за сегодня",
+  "todayCount": "{count, plural, one{Сегодня вы сосредоточились {count} раз} few{Сегодня вы сосредоточились {count} раза} other{Сегодня вы сосредоточились {count} раз}}",
+  "startFocus": "Начать фокус",
+  "minutes": "{count} мин",
+  "customChip": "Своё время",
+  "customTitle": "Задать своё время фокуса",
+  "customConfirm": "Взять это время",
+  "giveUp": "Сдаться",
+  "musicOn": "Включить музыку",
+  "musicOff": "Выключить музыку",
+  "resultSuccess": "Готово! Кот вами гордится",
+  "resultAbandoned": "Ничего страшного. Попробуйте ещё раз",
+  "resultLeftApp": "Фокус прервался. Попробуем снова?",
+  "totalFocus": "Всего {count} мин фокуса",
+  "back": "Назад"
+}

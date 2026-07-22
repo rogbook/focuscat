@@ -1,0 +1,19 @@
+{
+  "@@locale": "ar",
+  "appTitle": "قط التركيز",
+  "todayWaiting": "في انتظار أول جلسة تركيز اليوم",
+  "todayCount": "{count, plural, =1{ركّزت مرة واحدة اليوم} other{ركّزت {count} مرات اليوم}}",
+  "startFocus": "ابدأ التركيز",
+  "minutes": "{count} دقيقة",
+  "customChip": "مخصص",
+  "customTitle": "حدّد مدة التركيز بنفسك",
+  "customConfirm": "استخدم هذه المدة",
+  "giveUp": "استسلام",
+  "musicOn": "تشغيل الموسيقى",
+  "musicOff": "إيقاف الموسيقى",
+  "resultSuccess": "أحسنت! قطتك فخورة بك",
+  "resultAbandoned": "لا بأس. حاول مرة أخرى",
+  "resultLeftApp": "انقطع تركيزك. نحاول مجددًا؟",
+  "totalFocus": "إجمالي التركيز {count} دقيقة",
+  "back": "رجوع"
+}

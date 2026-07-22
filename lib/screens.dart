@@ -9,6 +9,10 @@ import 'ads.dart';
 import 'app_state.dart';
 import 'cat.dart';
 import 'focus_timer.dart';
+import 'l10n/app_localizations.dart';
+
+/// 이 화면의 번역 문구. 기기 언어에 맞는 것이 자동으로 잡힌다.
+AppLocalizations _t(BuildContext c) => AppLocalizations.of(c)!;
 
 /// Figma의 Todo 대시보드 시안에서 가져온 색.
 /// (Mobile_app_design | Todo app, node 1:406)
@@ -128,6 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const _maxCustom = 180;
 
   Future<void> _pickCustom() async {
+    final t = _t(context);
     var picked = _custom ?? _minutes;
     final result = await showModalBottomSheet<int>(
       context: context,
@@ -141,9 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                '집중 시간 직접 설정',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              Text(
+                t.customTitle,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SizedBox(
                 height: 180,
@@ -155,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onSelectedItemChanged: (i) => picked = i + _minCustom,
                   children: [
                     for (var m = _minCustom; m <= _maxCustom; m++)
-                      Center(child: Text('$m분')),
+                      Center(child: Text(t.minutes(m))),
                   ],
                 ),
               ),
@@ -164,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () => Navigator.pop(sheetContext, picked),
-                  child: const Text('이 시간으로'),
+                  child: Text(t.customConfirm),
                 ),
               ),
             ],
@@ -183,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = _t(context);
     return Scaffold(
       // 민트 밴드가 상태바 밑까지 차야 해서 SafeArea로 감싸지 않는다.
       body: AnimatedBuilder(
@@ -196,8 +205,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Stack(
               children: [
                 _HeaderBand(
-                  title: '집중냥이',
-                  subtitle: done > 0 ? '오늘 $done번 집중했어요' : '오늘 첫 집중을 기다리는 중',
+                  title: t.appTitle,
+                  subtitle: done > 0 ? t.todayCount(done) : t.todayWaiting,
                 ),
                 Positioned.fill(
                   child: Center(
@@ -223,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             for (final m in _choices)
                               ChoiceChip(
-                                label: Text('$m분'),
+                                label: Text(t.minutes(m)),
                                 selected: _minutes == m,
                                 // 테마에만 맡기면 선택 안 된 칩 글씨까지 흰색이
                                 // 되어 흰 카드 위에서 사라진다.
@@ -238,7 +247,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             // 정해둔 시간 밖을 고르는 칩. 고르고 나면 그 시간을
                             // 그대로 라벨에 달아 다시 누르면 바꿀 수 있게 한다.
                             ChoiceChip(
-                              label: Text(_custom == null ? '직접' : '$_custom분'),
+                              label: Text(
+                                _custom == null
+                                    ? t.customChip
+                                    : t.minutes(_custom!),
+                              ),
                               selected: _custom != null && _minutes == _custom,
                               labelStyle: TextStyle(
                                 color: _custom != null && _minutes == _custom
@@ -259,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 builder: (_) => FocusScreen(minutes: _minutes),
                               ),
                             ),
-                            child: const Text('집중 시작'),
+                            child: Text(t.startFocus),
                           ),
                         ),
                       ],
@@ -382,6 +395,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final t = _t(context);
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -410,7 +424,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
                 },
                 icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
                 color: kTeal,
-                tooltip: _muted ? '음악 켜기' : '음악 끄기',
+                tooltip: _muted ? t.musicOn : t.musicOff,
               ),
               const Spacer(),
               TextButton(
@@ -418,7 +432,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
                   _timer.abandon();
                   _finish();
                 },
-                child: const Text('포기하기'),
+                child: Text(t.giveUp),
               ),
               const SizedBox(height: 48),
             ],
@@ -451,12 +465,13 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = _t(context);
     final outcome = widget.outcome;
     final success = outcome == FocusOutcome.success;
     final message = switch (outcome) {
-      FocusOutcome.success => '집중 완료! 고양이가 뿌듯해해요',
-      FocusOutcome.abandoned => '괜찮아요. 다음에 또 해봐요',
-      FocusOutcome.leftApp => '집중이 끊겼어요. 다시 해볼까요?',
+      FocusOutcome.success => t.resultSuccess,
+      FocusOutcome.abandoned => t.resultAbandoned,
+      FocusOutcome.leftApp => t.resultLeftApp,
     };
     return Scaffold(
       body: SafeArea(
@@ -480,7 +495,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '누적 집중 ${(appState.totalSuccessSeconds / 60).floor()}분',
+                  t.totalFocus((appState.totalSuccessSeconds / 60).floor()),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
@@ -488,7 +503,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 FilledButton(
                   onPressed: () =>
                       Navigator.of(context).popUntil((route) => route.isFirst),
-                  child: const Text('돌아가기'),
+                  child: Text(t.back),
                 ),
               ],
             ),

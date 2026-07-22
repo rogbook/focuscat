@@ -1,0 +1,19 @@
+{
+  "@@locale": "zh",
+  "appTitle": "专注猫",
+  "todayWaiting": "今天还没有开始专注",
+  "todayCount": "今天已专注{count}次",
+  "startFocus": "开始专注",
+  "minutes": "{count}分钟",
+  "customChip": "自定义",
+  "customTitle": "自定义专注时长",
+  "customConfirm": "就用这个时长",
+  "giveUp": "放弃",
+  "musicOn": "打开音乐",
+  "musicOff": "关闭音乐",
+  "resultSuccess": "完成！猫咪为你骄傲",
+  "resultAbandoned": "没关系，下次再来",
+  "resultLeftApp": "专注被打断了，再试一次？",
+  "totalFocus": "累计专注{count}分钟",
+  "back": "返回"
+}

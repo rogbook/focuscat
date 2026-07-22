@@ -1,0 +1,19 @@
+{
+  "@@locale": "ko",
+  "appTitle": "집중냥이",
+  "todayWaiting": "오늘 첫 집중을 기다리는 중",
+  "todayCount": "오늘 {count}번 집중했어요",
+  "startFocus": "집중 시작",
+  "minutes": "{count}분",
+  "customChip": "직접",
+  "customTitle": "집중 시간 직접 설정",
+  "customConfirm": "이 시간으로",
+  "giveUp": "포기하기",
+  "musicOn": "음악 켜기",
+  "musicOff": "음악 끄기",
+  "resultSuccess": "집중 완료! 고양이가 뿌듯해해요",
+  "resultAbandoned": "괜찮아요. 다음에 또 해봐요",
+  "resultLeftApp": "집중이 끊겼어요. 다시 해볼까요?",
+  "totalFocus": "누적 집중 {count}분",
+  "back": "돌아가기"
+}
