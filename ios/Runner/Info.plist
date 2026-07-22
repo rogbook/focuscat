@@ -6,8 +6,10 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- 홈 화면에 뜨는 이름. 스토어 등록명(집중냥이)과 달리 전 세계 공통이라
+	     영문으로 둔다. -->
 	<key>CFBundleDisplayName</key>
-	<string>Focuscat</string>
+	<string>FocusCat</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
