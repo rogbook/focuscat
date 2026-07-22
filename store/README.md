@@ -12,12 +12,13 @@
 1. **AdMob 실제 광고 단위 ID로 교체** — [lib/ads.dart](../lib/ads.dart)와
    양쪽 플랫폼의 앱 ID(AndroidManifest.xml, Info.plist)가 모두 구글 테스트
    ID다. 테스트 ID로 출시하면 수익이 0이다.
-2. **개인정보처리방침 URL** — 광고가 붙은 앱은 양 스토어 모두 필수.
-   수집 항목은 광고 SDK가 쓰는 광고 식별자다.
-3. **iOS: App Tracking Transparency** — 맞춤 광고를 쓰려면 추적 동의
-   요청이 필요하다. 아직 붙이지 않았다.
-4. **유럽 대상 광고 동의(UMP)** — 전 세계 출시라면 필요하다. 아직 없다.
-5. **Play 데이터 보안 양식** — 광고 식별자 수집을 신고해야 한다.
+2. **개인정보처리방침 URL** — 문서는 docs/privacy-policy/index.html에
+   한국어·영어로 준비돼 있다. 연락처 이메일만 채워 어디든 올리고 URL을
+   Play·App Store·AdMob 세 곳에 넣는다.
+3. ~~iOS: App Tracking Transparency~~ — 붙였다.
+4. ~~유럽 대상 광고 동의(UMP)~~ — 붙였다.
+5. **Play 데이터 보안 · App Store 개인정보 양식** — 답안은 data_safety.md에
+   그대로 채워 뒀다.
 
 ## 확인되지 않은 것
 
