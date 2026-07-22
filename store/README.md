@@ -31,3 +31,32 @@
 
 - 실제 광고 노출. 구글 테스트 광고가 개발 환경에서 계속 "재고 없음"을
   반환해 화면으로 확인하지 못했다. 통합 자체(초기화·요청·응답)는 정상이다.
+
+---
+
+## 안드로이드 (Google Play) 준비 상태
+
+문구는 `listing_play.md`에 따로 있다 — Play는 글자 수 제한이 App Store와 달라
+그대로 못 쓴다(제목 30자, 간단한 설명 80자).
+
+| 자산 | 위치 | 상태 |
+|---|---|---|
+| 앱 아이콘 512×512 | `play_assets/icon_512.png` | 준비됨 |
+| 그래픽 이미지 1024×500 | `play_assets/feature_ko.png` · `feature_en.png` | 준비됨 |
+| 휴대전화 스크린샷 | `screenshots/play/{ko,en}/` 각 4장 | 준비됨 |
+| 등록 문구 | `listing_play.md` | 준비됨 |
+| 데이터 보안 답안 | `data_safety.md` | 준비됨 |
+| 개인정보처리방침 | https://rogbook.github.io/focuscat/privacy-policy/ | 게시됨 |
+
+빌드는 확인했다 — `app-release.aab` 70.5MB, versionCode 2, minSdk 24,
+targetSdk 36(Play 요구치 충족). 릴리스 APK를 에뮬레이터에 설치해 R8 축소 후에도
+Rive 고양이가 정상 렌더되는 것까지 봤다.
+
+### 남은 것 (사람이 해야 하는 것)
+
+1. **업로드 키 만들기** — `android/SIGNING.md` 참고. 이게 없으면 디버그 키로
+   서명되어 Play가 거부한다. **키를 잃어버리면 앱 업데이트가 영영 불가능하다.**
+2. **AdMob 안드로이드 광고 단위 발급** — `lib/ads.dart`의 안드로이드 항목이
+   아직 구글 테스트 ID다. 이대로 출시하면 수익이 0이다.
+3. Play Console에서 앱 만들기 → 위 자산 업로드 → 데이터 보안 설문 →
+   콘텐츠 등급 설문 → 광고 포함 '예' → 내부 테스트 트랙부터 올려보길 권한다.
