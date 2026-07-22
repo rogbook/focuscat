@@ -23,16 +23,16 @@ class FocusSession {
   final bool success;
 
   Map<String, dynamic> toJson() => {
-        'startedAt': startedAt.toIso8601String(),
-        'durationSeconds': durationSeconds,
-        'success': success,
-      };
+    'startedAt': startedAt.toIso8601String(),
+    'durationSeconds': durationSeconds,
+    'success': success,
+  };
 
   factory FocusSession.fromJson(Map<String, dynamic> json) => FocusSession(
-        startedAt: DateTime.parse(json['startedAt'] as String),
-        durationSeconds: json['durationSeconds'] as int,
-        success: json['success'] as bool,
-      );
+    startedAt: DateTime.parse(json['startedAt'] as String),
+    durationSeconds: json['durationSeconds'] as int,
+    success: json['success'] as bool,
+  );
 }
 
 /// 앱 전체 상태. 세션 기록을 갖고, 거기서 성장 단계를 끌어낸다.
@@ -61,11 +61,13 @@ class AppState extends ChangeNotifier {
   int get todaySuccessCount {
     final now = DateTime.now();
     return _sessions
-        .where((s) =>
-            s.success &&
-            s.startedAt.year == now.year &&
-            s.startedAt.month == now.month &&
-            s.startedAt.day == now.day)
+        .where(
+          (s) =>
+              s.success &&
+              s.startedAt.year == now.year &&
+              s.startedAt.month == now.month &&
+              s.startedAt.day == now.day,
+        )
         .length;
   }
 
@@ -79,8 +81,7 @@ class AppState extends ChangeNotifier {
         // ponytail: 저장값이 깨져 있으면(포맷 변경, 손상 등) 빈 목록으로 시작한다.
         // 로깅 인프라가 없어 조용히 무시 — 앱이 시작 시 죽는 것보다 낫다.
         _sessions.addAll(
-          decoded
-              .map((e) => FocusSession.fromJson(e as Map<String, dynamic>)),
+          decoded.map((e) => FocusSession.fromJson(e as Map<String, dynamic>)),
         );
       } catch (_) {
         _sessions.clear();

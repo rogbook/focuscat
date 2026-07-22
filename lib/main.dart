@@ -19,10 +19,35 @@ class FocusCatApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFF5D5B8),
+          seedColor: kTeal,
           brightness: Brightness.light,
+          primary: kTeal,
         ),
+        scaffoldBackgroundColor: kBg,
         useMaterial3: true,
+        chipTheme: ChipThemeData(
+          showCheckmark: false,
+          backgroundColor: Colors.white,
+          selectedColor: kTeal,
+          side: const BorderSide(color: Color(0x1F000000)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            backgroundColor: kTeal,
+            foregroundColor: Colors.white,
+            minimumSize: const Size(0, 52),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+          ),
+        ),
       ),
       home: const HomeScreen(),
     );
