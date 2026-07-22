@@ -2,8 +2,9 @@ package com.rogbook.focuscat
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.net.Uri
 import android.widget.RemoteViews
-import es.antonborri.home_widget.HomeWidgetPlugin
+import es.antonborri.home_widget.HomeWidgetLaunchIntent
 import es.antonborri.home_widget.HomeWidgetProvider
 
 /**
@@ -28,6 +29,15 @@ class FocusCatWidgetProvider : HomeWidgetProvider() {
                     if (today > 0) "오늘 ${today}번 집중" else "오늘 첫 집중 대기 중",
                 )
                 setTextViewText(R.id.total, "누적 ${minutes}분")
+                // 탭하면 앱이 열리면서 곧바로 집중이 시작된다.
+                setOnClickPendingIntent(
+                    R.id.root,
+                    HomeWidgetLaunchIntent.getActivity(
+                        context,
+                        MainActivity::class.java,
+                        Uri.parse("focuscat://start"),
+                    ),
+                )
             }
             appWidgetManager.updateAppWidget(id, views)
         }

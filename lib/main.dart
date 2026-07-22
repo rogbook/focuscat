@@ -1,7 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 
 import 'app_state.dart';
 import 'screens.dart';
+
+/// 위젯 탭으로 시작할 때 쓰는 집중 시간(분).
+const kWidgetStartMinutes = 25;
+
+final _navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,12 +17,53 @@ Future<void> main() async {
   runApp(const FocusCatApp());
 }
 
-class FocusCatApp extends StatelessWidget {
+/// 위젯을 탭해서 앱이 열렸으면 곧바로 집중을 시작한다.
+///
+/// 위젯 안에서는 타이머를 돌릴 수 없다(그릴 뿐 프로세스가 없다).
+/// 게다가 이 앱은 앱을 벗어나면 실패로 치므로, 위젯의 역할은
+/// "집중 화면까지 한 번에 데려다주는 것"까지다.
+void _startFocusFrom(Uri? uri) {
+  if (uri?.host != 'start') return;
+  final navigator = _navigatorKey.currentState;
+  if (navigator == null) return;
+  navigator.push(
+    MaterialPageRoute(
+      builder: (_) => const FocusScreen(minutes: kWidgetStartMinutes),
+    ),
+  );
+}
+
+class FocusCatApp extends StatefulWidget {
   const FocusCatApp({super.key});
+
+  @override
+  State<FocusCatApp> createState() => _FocusCatAppState();
+}
+
+class _FocusCatAppState extends State<FocusCatApp> {
+  StreamSubscription<Uri?>? _widgetTaps;
+
+  @override
+  void initState() {
+    super.initState();
+    // 앱이 떠 있는 동안의 탭.
+    _widgetTaps = HomeWidget.widgetClicked.listen(_startFocusFrom);
+    // 앱이 꺼져 있다가 위젯 탭으로 켜진 경우 — 첫 프레임 뒤라야 navigator가 있다.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _startFocusFrom(await HomeWidget.initiallyLaunchedFromHomeWidget());
+    });
+  }
+
+  @override
+  void dispose() {
+    _widgetTaps?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: '집중냥이',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

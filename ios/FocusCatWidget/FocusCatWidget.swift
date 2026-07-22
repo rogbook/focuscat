@@ -71,6 +71,10 @@ struct FocusCatWidgetEntryView: View {
         }
         .multilineTextAlignment(.center)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // 탭하면 앱이 열리면서 곧바로 집중이 시작된다.
+        // homeWidget 쿼리는 home_widget 플러그인이 위젯 URL을 가려내는 표식이라
+        // 빼면 앱이 열리기만 하고 아무 일도 일어나지 않는다(isWidgetUrl 참고).
+        .widgetURL(URL(string: "focuscat://start?homeWidget=true"))
     }
 }
 
