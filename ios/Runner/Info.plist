@@ -59,6 +59,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- ATT 안내 문구. 이 키가 없으면 추적 동의를 요청하는 순간 앱이 죽는다. -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>관련성 높은 광고를 보여주기 위해 사용합니다. 거부해도 앱은 그대로 쓸 수 있습니다.</string>
 	<!-- AdMob 앱 ID (실제). -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-8879427346433924~6785003378</string>

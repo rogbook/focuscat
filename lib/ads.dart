@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:io';
+
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -27,9 +30,44 @@ class Ads {
   RewardedInterstitialAd? _ad;
   bool _loading = false;
 
+  /// 동의를 먼저 받고 광고를 초기화한다. 순서가 중요하다 — 초기화가 먼저면
+  /// 동의 없이 맞춤 광고 식별자가 쓰일 수 있다.
   Future<void> init() async {
+    await _requestConsent();
+    await _requestTracking();
     await MobileAds.instance.initialize();
     load();
+  }
+
+  /// 유럽(EEA·영국) 사용자에게 광고 동의를 받는다(UMP).
+  /// 다른 지역에서는 구글이 "필요 없음"으로 응답해 아무것도 뜨지 않는다.
+  /// 전 세계 출시라면 이게 없으면 정책 위반이다.
+  Future<void> _requestConsent() async {
+    final done = Completer<void>();
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      ConsentRequestParameters(),
+      () async {
+        await ConsentForm.loadAndShowConsentFormIfRequired((_) {});
+        if (!done.isCompleted) done.complete();
+      },
+      (_) {
+        // 동의 정보를 못 받아도 앱은 계속 돌아가야 한다. 이 경우 구글이
+        // 맞춤 광고 대신 비맞춤 광고를 내려준다.
+        if (!done.isCompleted) done.complete();
+      },
+    );
+    return done.future;
+  }
+
+  /// iOS 추적 동의(ATT). 이게 없으면 맞춤 광고를 못 쓰고 심사에서 걸린다.
+  /// 안드로이드에는 없는 개념이라 그쪽에서는 아무 일도 하지 않는다.
+  Future<void> _requestTracking() async {
+    if (!Platform.isIOS) return;
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+    if (status != TrackingStatus.notDetermined) return;
+    // 앱이 완전히 떠오른 뒤에 요청해야 시스템 창이 뜬다.
+    await Future.delayed(const Duration(milliseconds: 400));
+    await AppTrackingTransparency.requestTrackingAuthorization();
   }
 
   /// 미리 받아둔다. 집중이 끝난 뒤에 그제서야 받으면 몇 초를 기다리게 된다.
