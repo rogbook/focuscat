@@ -59,6 +59,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<!-- AdMob 앱 ID. 지금은 구글 테스트 ID — 출시 전 실제 ID로 교체. -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-3940256099942544~1458002511</string>
 	<!-- 홈 화면 위젯이 focuscat://start 로 앱을 연다. -->
 	<key>CFBundleURLTypes</key>
 	<array>

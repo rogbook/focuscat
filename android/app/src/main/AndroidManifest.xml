@@ -30,6 +30,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- AdMob 앱 ID. 지금은 구글 테스트 ID — 출시 전 실제 ID로 교체. -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <!-- 홈 화면 위젯 -->
         <receiver
             android:name=".FocusCatWidgetProvider"

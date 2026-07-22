@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'ads.dart';
 import 'app_state.dart';
 import 'cat.dart';
 import 'focus_timer.dart';
@@ -429,13 +430,28 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
 }
 
 /// 결과 — 성공하면 뿌듯하게, 실패해도 나무라지 않는다.
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key, required this.outcome});
 
   final FocusOutcome outcome;
 
   @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // 광고는 집중이 끝난 뒤 여기서만 나온다. 집중 중에는 절대 띄우지 않는다.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => Ads.instance.showIfReady(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final outcome = widget.outcome;
     final success = outcome == FocusOutcome.success;
     final message = switch (outcome) {
       FocusOutcome.success => '집중 완료! 고양이가 뿌듯해해요',

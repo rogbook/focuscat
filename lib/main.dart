@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 
+import 'ads.dart';
 import 'app_state.dart';
 import 'screens.dart';
 
@@ -14,6 +15,8 @@ final _navigatorKey = GlobalKey<NavigatorState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await appState.load();
+  // 광고를 미리 받아둔다. 실패해도 앱은 그대로 돌아가야 한다.
+  unawaited(Ads.instance.init());
   runApp(const FocusCatApp());
 }
 
