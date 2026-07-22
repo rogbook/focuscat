@@ -26,7 +26,7 @@ A quiet loop runs in the background. One tap mutes it when you're somewhere you 
 Pick 15, 25, 45 or 60 minutes, or set your own from 1 minute up to 3 hours.
 
 **A cat that grows with you**
-Successful focus time adds up and your cat grows. See how many sessions you finished today and how much you've built up, right on the home screen widget. Tap the widget and a session starts immediately.
+Successful focus time adds up and your cat grows.
 
 **No ads while you focus**
 Ads appear only after a session ends. Nothing covers the screen while you're focusing.

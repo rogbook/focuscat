@@ -34,7 +34,7 @@ Play는 글자 수 제한이 App Store와 다르다. 제목 30자, 간단한 설
 15 · 25 · 45 · 60분 중에 고르거나, 1분부터 3시간까지 직접 설정할 수 있습니다.
 
 ■ 쌓일수록 자라는 고양이
-성공한 집중 시간이 누적되면 고양이가 자랍니다. 하루에 몇 번 집중했는지, 지금까지 얼마나 쌓았는지 홈 화면 위젯에서 바로 볼 수 있습니다. 위젯을 누르면 곧바로 집중이 시작됩니다.
+성공한 집중 시간이 누적되면 고양이가 자랍니다.
 
 ■ 집중 중에는 광고가 없습니다
 광고는 집중이 끝난 뒤에만 나옵니다. 집중하는 동안 화면을 가리는 것은 아무것도 없습니다.
@@ -73,7 +73,7 @@ A quiet loop runs in the background. One tap mutes it when you're somewhere you 
 Pick 15, 25, 45 or 60 minutes, or set your own from 1 minute up to 3 hours.
 
 ■ A cat that grows with you
-Successful focus time adds up and your cat grows. See how many sessions you finished today and how much you've built up, right on the home screen widget. Tap the widget and a session starts immediately.
+Successful focus time adds up and your cat grows.
 
 ■ No ads while you focus
 Ads appear only after a session ends. Nothing covers the screen while you're focusing.
