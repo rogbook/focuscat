@@ -61,4 +61,23 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get back => '돌아가기';
+
+  @override
+  String get info => '앱 정보';
+
+  @override
+  String get privacy => '개인정보처리방침';
+
+  @override
+  String get privacyBody =>
+      '계정도 로그인도 없습니다. 집중 기록은 이 기기에만 저장되며 어디로도 전송되지 않습니다.\n\n광고는 집중이 끝난 뒤에만 나오고, 집중하는 동안에는 절대 나오지 않습니다. 광고를 위해 Google AdMob이 광고 식별자와 기기 정보를 이용할 수 있습니다.\n\n앱을 삭제하면 모든 기록이 함께 지워집니다.';
+
+  @override
+  String get privacyFull => '전문 보기';
+
+  @override
+  String get licenses => '오픈소스 라이선스';
+
+  @override
+  String get version => '버전';
 }

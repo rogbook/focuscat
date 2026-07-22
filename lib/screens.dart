@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart' show CupertinoPicker;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'ads.dart';
@@ -18,6 +19,12 @@ AppLocalizations _t(BuildContext c) => AppLocalizations.of(c)!;
 /// (Mobile_app_design | Todo app, node 1:406)
 const kTeal = Color(0xFF50C2C9);
 const kBg = Color(0xFFF0F4F3);
+
+/// 개인정보처리방침 전문. 앱 안에는 요약만 두고, 전문은 여기로 보낸다 —
+/// 같은 글을 코드와 웹에 두 벌 두면 한쪽이 반드시 낡는다.
+const kPrivacyUrl = 'https://rogbook.github.io/focuscat/privacy-policy/';
+
+const kAppVersion = '1.0.0';
 
 String _mmss(int seconds) {
   final m = (seconds ~/ 60).toString().padLeft(2, '0');
@@ -53,10 +60,11 @@ class _Card extends StatelessWidget {
 
 /// 시안 상단의 민트 밴드. 왼쪽 위 반투명 원 두 개까지 흉내낸다.
 class _HeaderBand extends StatelessWidget {
-  const _HeaderBand({required this.title, this.subtitle});
+  const _HeaderBand({required this.title, this.subtitle, this.action});
 
   final String title;
   final String? subtitle;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +77,12 @@ class _HeaderBand extends StatelessWidget {
           children: [
             Positioned(left: -100, top: -87, child: _circle(200)),
             Positioned(left: 0, top: -60, child: _circle(160)),
+            if (action != null)
+              Positioned(
+                right: 12,
+                top: MediaQuery.paddingOf(context).top + 4,
+                child: action!,
+              ),
             Positioned(
               left: 25,
               right: 25,
@@ -210,6 +224,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 _HeaderBand(
                   title: t.appTitle,
                   subtitle: done > 0 ? t.todayCount(done) : t.todayWaiting,
+                  action: IconButton(
+                    icon: const Icon(Icons.info_outline, color: Colors.white),
+                    tooltip: t.info,
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const InfoScreen()),
+                    ),
+                  ),
                 ),
                 Positioned.fill(
                   child: Center(
@@ -515,6 +536,77 @@ class _ResultScreenState extends State<ResultScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// 앱 정보 — 개인정보처리방침 요약과 오픈소스 라이선스.
+///
+/// 스토어는 별도로 공개 URL을 요구하므로 이 화면이 그걸 대신하지는 않는다.
+/// 여기엔 요약만 두고 전문은 웹으로 보낸다.
+class InfoScreen extends StatelessWidget {
+  const InfoScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = _t(context);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(t.info),
+        backgroundColor: kTeal,
+        foregroundColor: Colors.white,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          _Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  t.privacy,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(t.privacyBody, style: const TextStyle(height: 1.6)),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => launchUrl(
+                    Uri.parse(kPrivacyUrl),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  child: Text(t.privacyFull),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          _Card(
+            child: Column(
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(t.licenses),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => showLicensePage(
+                    context: context,
+                    applicationName: t.appTitle,
+                    applicationVersion: kAppVersion,
+                  ),
+                ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(t.version),
+                  trailing: const Text(kAppVersion),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -15,5 +15,11 @@
   "resultAbandoned": "Está bien. Inténtalo de nuevo",
   "resultLeftApp": "Se interrumpió tu enfoque. ¿Otra vez?",
   "totalFocus": "{count} min concentrado en total",
-  "back": "Volver"
+  "back": "Volver",
+  "info": "Información",
+  "privacy": "Política de privacidad",
+  "privacyBody": "Sin cuenta ni inicio de sesión. Tus registros se quedan en este dispositivo y nunca se suben.\n\nLos anuncios aparecen solo al terminar una sesión, nunca mientras te concentras. Google AdMob puede usar tu identificador publicitario e información del dispositivo.\n\nDesinstalar la app borra todos los registros.",
+  "privacyFull": "Leer la política completa",
+  "licenses": "Licencias de código abierto",
+  "version": "Versión"
 }

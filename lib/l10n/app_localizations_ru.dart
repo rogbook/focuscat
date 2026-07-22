@@ -68,4 +68,23 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get back => 'Назад';
+
+  @override
+  String get info => 'О приложении';
+
+  @override
+  String get privacy => 'Политика конфиденциальности';
+
+  @override
+  String get privacyBody =>
+      'Без аккаунта и входа. Записи о фокусе хранятся только на этом устройстве и никуда не отправляются.\n\nРеклама показывается только после сессии и никогда во время фокуса. Google AdMob может использовать рекламный идентификатор и данные устройства.\n\nУдаление приложения стирает все записи.';
+
+  @override
+  String get privacyFull => 'Читать полностью';
+
+  @override
+  String get licenses => 'Лицензии open source';
+
+  @override
+  String get version => 'Версия';
 }

@@ -211,6 +211,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back'**
   String get back;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get info;
+
+  /// No description provided for @privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get privacy;
+
+  /// No description provided for @privacyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No account, no sign-in. Your focus records stay on this device and are never uploaded.\n\nAds are shown only after a session ends, never while you focus. Google AdMob may use your advertising identifier and device information to serve them.\n\nUninstalling the app deletes every record.'**
+  String get privacyBody;
+
+  /// No description provided for @privacyFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the full policy'**
+  String get privacyFull;
+
+  /// No description provided for @licenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Open source licenses'**
+  String get licenses;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
 }
 
 class _AppLocalizationsDelegate

@@ -75,15 +75,12 @@
 
 ## 개인정보처리방침 호스팅
 
-문서는 [docs/privacy-policy/index.html](../docs/privacy-policy/index.html)에
-한국어·영어로 준비돼 있습니다. **연락처 이메일만 채우면** 바로 올릴 수 있습니다.
+**이미 올라가 있습니다** — GitHub Pages로 게시했습니다.
 
-올릴 곳은 어디든 됩니다 — 양 스토어는 "공개적으로 접근 가능한 URL"만 요구합니다.
+    https://rogbook.github.io/focuscat/privacy-policy/
 
-- **GitHub Pages** (무료): 저장소를 GitHub에 올리고 Settings → Pages에서
-  `main` 브랜치의 `/docs` 폴더를 지정. 주소는
-  `https://<사용자명>.github.io/focuscat/privacy-policy/`
-- **티스토리 · 노션 공개 페이지 · 구글 사이트**: HTML 내용을 붙여넣어도 됩니다
+문서는 [docs/privacy-policy/index.html](../docs/privacy-policy/index.html)이고,
+커밋을 push하면 몇 분 안에 반영됩니다. **연락처 이메일 자리만 비어 있습니다.**
 
 같은 URL을 세 곳에 넣습니다: Play Console 앱 콘텐츠, App Store Connect 앱 정보,
 그리고 AdMob 앱 설정.

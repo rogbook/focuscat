@@ -67,4 +67,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get back => 'Back';
+
+  @override
+  String get info => 'About';
+
+  @override
+  String get privacy => 'Privacy policy';
+
+  @override
+  String get privacyBody =>
+      'No account, no sign-in. Your focus records stay on this device and are never uploaded.\n\nAds are shown only after a session ends, never while you focus. Google AdMob may use your advertising identifier and device information to serve them.\n\nUninstalling the app deletes every record.';
+
+  @override
+  String get privacyFull => 'Read the full policy';
+
+  @override
+  String get licenses => 'Open source licenses';
+
+  @override
+  String get version => 'Version';
 }

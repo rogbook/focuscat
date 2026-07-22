@@ -67,4 +67,23 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get back => 'वापस';
+
+  @override
+  String get info => 'ऐप जानकारी';
+
+  @override
+  String get privacy => 'गोपनीयता नीति';
+
+  @override
+  String get privacyBody =>
+      'कोई खाता नहीं, कोई साइन-इन नहीं। आपके फोकस रिकॉर्ड इसी डिवाइस पर रहते हैं और कभी अपलोड नहीं होते।\n\nविज्ञापन सिर्फ सेशन खत्म होने के बाद दिखते हैं, फोकस के दौरान कभी नहीं। Google AdMob विज्ञापन पहचानकर्ता और डिवाइस जानकारी का उपयोग कर सकता है।\n\nऐप हटाने पर सभी रिकॉर्ड मिट जाते हैं।';
+
+  @override
+  String get privacyFull => 'पूरी नीति पढ़ें';
+
+  @override
+  String get licenses => 'ओपन सोर्स लाइसेंस';
+
+  @override
+  String get version => 'संस्करण';
 }

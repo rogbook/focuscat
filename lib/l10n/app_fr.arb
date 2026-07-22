@@ -15,5 +15,11 @@
   "resultAbandoned": "Ce n'est rien. Réessayez plus tard",
   "resultLeftApp": "Votre concentration a été interrompue. On réessaie ?",
   "totalFocus": "{count} min de concentration au total",
-  "back": "Retour"
+  "back": "Retour",
+  "info": "À propos",
+  "privacy": "Politique de confidentialité",
+  "privacyBody": "Aucun compte, aucune connexion. Vos sessions restent sur cet appareil et ne sont jamais envoyées.\n\nLes publicités n'apparaissent qu'après une session, jamais pendant votre concentration. Google AdMob peut utiliser votre identifiant publicitaire et des informations sur l'appareil.\n\nDésinstaller l'application efface toutes les données.",
+  "privacyFull": "Lire la politique complète",
+  "licenses": "Licences open source",
+  "version": "Version"
 }

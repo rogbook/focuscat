@@ -15,5 +15,11 @@
   "resultAbandoned": "Tudo bem. Tente de novo",
   "resultLeftApp": "Seu foco foi interrompido. Tentar de novo?",
   "totalFocus": "{count} min focado no total",
-  "back": "Voltar"
+  "back": "Voltar",
+  "info": "Informações",
+  "privacy": "Política de privacidade",
+  "privacyBody": "Sem conta e sem login. Seus registros ficam neste dispositivo e nunca são enviados.\n\nAnúncios aparecem só depois que a sessão termina, nunca enquanto você foca. O Google AdMob pode usar seu identificador de anúncios e informações do aparelho.\n\nDesinstalar o app apaga todos os registros.",
+  "privacyFull": "Ler a política completa",
+  "licenses": "Licenças de código aberto",
+  "version": "Versão"
 }

@@ -67,4 +67,23 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get back => 'Zurück';
+
+  @override
+  String get info => 'Über die App';
+
+  @override
+  String get privacy => 'Datenschutzerklärung';
+
+  @override
+  String get privacyBody =>
+      'Kein Konto, keine Anmeldung. Deine Fokuszeiten bleiben auf diesem Gerät und werden nie hochgeladen.\n\nWerbung erscheint nur nach einer Sitzung, nie während du fokussierst. Google AdMob kann dafür deine Werbe-ID und Geräteinformationen nutzen.\n\nBeim Deinstallieren werden alle Daten gelöscht.';
+
+  @override
+  String get privacyFull => 'Vollständige Erklärung lesen';
+
+  @override
+  String get licenses => 'Open-Source-Lizenzen';
+
+  @override
+  String get version => 'Version';
 }

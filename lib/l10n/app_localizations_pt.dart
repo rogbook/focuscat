@@ -67,4 +67,23 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get back => 'Voltar';
+
+  @override
+  String get info => 'Informações';
+
+  @override
+  String get privacy => 'Política de privacidade';
+
+  @override
+  String get privacyBody =>
+      'Sem conta e sem login. Seus registros ficam neste dispositivo e nunca são enviados.\n\nAnúncios aparecem só depois que a sessão termina, nunca enquanto você foca. O Google AdMob pode usar seu identificador de anúncios e informações do aparelho.\n\nDesinstalar o app apaga todos os registros.';
+
+  @override
+  String get privacyFull => 'Ler a política completa';
+
+  @override
+  String get licenses => 'Licenças de código aberto';
+
+  @override
+  String get version => 'Versão';
 }

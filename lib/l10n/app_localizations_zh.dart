@@ -61,4 +61,23 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get back => '返回';
+
+  @override
+  String get info => '应用信息';
+
+  @override
+  String get privacy => '隐私政策';
+
+  @override
+  String get privacyBody =>
+      '没有账号，也无需登录。专注记录仅保存在本机，绝不上传。\n\n广告只在专注结束后出现，专注期间绝不打扰。Google AdMob 可能使用广告标识符和设备信息投放广告。\n\n卸载应用即删除全部记录。';
+
+  @override
+  String get privacyFull => '阅读全文';
+
+  @override
+  String get licenses => '开源许可';
+
+  @override
+  String get version => '版本';
 }

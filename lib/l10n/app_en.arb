@@ -36,5 +36,11 @@
       }
     }
   },
-  "back": "Back"
+  "back": "Back",
+  "info": "About",
+  "privacy": "Privacy policy",
+  "privacyBody": "No account, no sign-in. Your focus records stay on this device and are never uploaded.\n\nAds are shown only after a session ends, never while you focus. Google AdMob may use your advertising identifier and device information to serve them.\n\nUninstalling the app deletes every record.",
+  "privacyFull": "Read the full policy",
+  "licenses": "Open source licenses",
+  "version": "Version"
 }

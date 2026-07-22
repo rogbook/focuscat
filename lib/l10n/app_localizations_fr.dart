@@ -68,4 +68,23 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get back => 'Retour';
+
+  @override
+  String get info => 'À propos';
+
+  @override
+  String get privacy => 'Politique de confidentialité';
+
+  @override
+  String get privacyBody =>
+      'Aucun compte, aucune connexion. Vos sessions restent sur cet appareil et ne sont jamais envoyées.\n\nLes publicités n\'apparaissent qu\'après une session, jamais pendant votre concentration. Google AdMob peut utiliser votre identifiant publicitaire et des informations sur l\'appareil.\n\nDésinstaller l\'application efface toutes les données.';
+
+  @override
+  String get privacyFull => 'Lire la politique complète';
+
+  @override
+  String get licenses => 'Licences open source';
+
+  @override
+  String get version => 'Version';
 }

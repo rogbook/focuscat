@@ -15,5 +15,11 @@
   "resultAbandoned": "Kein Problem. Versuch es noch mal",
   "resultLeftApp": "Dein Fokus wurde unterbrochen. Noch mal?",
   "totalFocus": "Insgesamt {count} Min. fokussiert",
-  "back": "Zurück"
+  "back": "Zurück",
+  "info": "Über die App",
+  "privacy": "Datenschutzerklärung",
+  "privacyBody": "Kein Konto, keine Anmeldung. Deine Fokuszeiten bleiben auf diesem Gerät und werden nie hochgeladen.\n\nWerbung erscheint nur nach einer Sitzung, nie während du fokussierst. Google AdMob kann dafür deine Werbe-ID und Geräteinformationen nutzen.\n\nBeim Deinstallieren werden alle Daten gelöscht.",
+  "privacyFull": "Vollständige Erklärung lesen",
+  "licenses": "Open-Source-Lizenzen",
+  "version": "Version"
 }

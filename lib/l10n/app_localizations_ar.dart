@@ -67,4 +67,23 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get back => 'رجوع';
+
+  @override
+  String get info => 'عن التطبيق';
+
+  @override
+  String get privacy => 'سياسة الخصوصية';
+
+  @override
+  String get privacyBody =>
+      'لا حساب ولا تسجيل دخول. تبقى سجلات التركيز على هذا الجهاز ولا تُرسل أبدًا.\n\nتظهر الإعلانات بعد انتهاء الجلسة فقط، ولا تظهر أثناء التركيز. قد يستخدم Google AdMob معرّف الإعلانات ومعلومات الجهاز.\n\nحذف التطبيق يمحو كل السجلات.';
+
+  @override
+  String get privacyFull => 'قراءة السياسة كاملة';
+
+  @override
+  String get licenses => 'تراخيص مفتوحة المصدر';
+
+  @override
+  String get version => 'الإصدار';
 }

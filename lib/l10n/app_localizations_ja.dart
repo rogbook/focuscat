@@ -61,4 +61,23 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get back => '戻る';
+
+  @override
+  String get info => 'アプリ情報';
+
+  @override
+  String get privacy => 'プライバシーポリシー';
+
+  @override
+  String get privacyBody =>
+      'アカウントもログインもありません。集中の記録はこの端末にのみ保存され、送信されることはありません。\n\n広告は集中が終わったあとにだけ表示され、集中中には表示されません。広告のためにGoogle AdMobが広告IDと端末情報を利用する場合があります。\n\nアプリを削除するとすべての記録も消えます。';
+
+  @override
+  String get privacyFull => '全文を読む';
+
+  @override
+  String get licenses => 'オープンソースライセンス';
+
+  @override
+  String get version => 'バージョン';
 }
