@@ -20,13 +20,11 @@ SHOTS = {
         ("ko_home.png", "고양이와 함께 집중하세요"),
         ("ko_focus.png", "집중하는 동안 lofi가 흐릅니다"),
         ("ko_result.png", "앱을 벗어나면 집중이 끊깁니다"),
-        ("ko_widget.png", "홈 화면 위젯으로 바로 시작"),
     ],
     "en": [
         ("en_home.png", "Focus together with your cat"),
         ("en_focus.png", "Lofi plays while you focus"),
         ("en_result.png", "Leave the app and your focus breaks"),
-        ("ko_widget.png", "Start right from the home screen"),
     ],
 }
 
@@ -42,6 +40,7 @@ NOTICE = {
             "lofi 배경음이 흐르고, 언제든 끌 수 있습니다",
             "1분부터 3시간까지 원하는 시간으로",
             "쌓인 시간만큼 고양이가 자랍니다",
+            "홈 화면 위젯을 누르면 바로 집중이 시작됩니다",
             "계정 · 로그인 · 결제 없음. 무료입니다",
         ],
     ),
@@ -54,6 +53,7 @@ NOTICE = {
             "Lofi plays in the background, mute it anytime",
             "Any length from 1 minute to 3 hours",
             "Your cat grows with the time you build up",
+            "Tap the home screen widget to start right away",
             "No account, no sign-in, no purchases. Free",
         ],
     ),

@@ -1,8 +1,12 @@
 # 스토어 등록 자료
 
 - `listing_ko.md` · `listing_en.md` — 앱 이름, 설명, 키워드
-- `screenshots/appstore/{ko,en}/` — 1320×2868 (iPhone 6.9인치)
-- `screenshots/play/{ko,en}/` — 1080×2340 (Google Play 폰)
+- `screenshots/appstore/{ko,en}/` — 1320×2868 (iPhone 6.9인치), 각 4장
+- `screenshots/play/{ko,en}/` — 1080×2340 (Google Play 폰), 각 4장
+
+위젯을 올린 홈 화면 장면은 없다. 시뮬레이터 위젯 갤러리가 비어 있어
+(재부팅해도 마찬가지) 실제 화면을 찍지 못했고, 없는 화면을 합성해 만들지는
+않았다. 위젯 이야기는 마지막 안내문 장에 한 줄로 넣었다.
 
 스크린샷을 다시 만들려면 시뮬레이터에서 화면을 캡처한 뒤
 `scratchpad/make_store.py`를 돌린다. 캡션 문구도 그 파일에 있다.
