@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'app_state.dart';
 import 'cat.dart';
@@ -226,6 +227,9 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
       if (_timer.isFinished) _finish();
     });
     _startMusic();
+    // 자동 잠금이 걸리면 앱이 백그라운드로 내려가 집중이 실패한다.
+    // 폰을 내려놓고 집중하는 게 정상 사용이므로 이 화면에서만 화면을 켜둔다.
+    WakelockPlus.enable();
   }
 
   /// 집중하는 동안만 lofi를 반복 재생한다. 음원이 없거나 오디오 장치가
@@ -246,6 +250,12 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       _graceTimer?.cancel();
       _graceTimer = null;
+      // 나가 있는 동안 tick이 멈췄으니 시계로 맞춘다. 유예 안에 돌아왔어도
+      // 그 시간은 집중한 게 아니지만, 흐른 시간까지 되돌릴 수는 없다.
+      setState(() {
+        _timer.syncElapsed(DateTime.now().difference(_startedAt).inSeconds);
+      });
+      if (_timer.isFinished) _finish();
       return;
     }
     if (state == AppLifecycleState.paused ||
@@ -289,6 +299,7 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     _ticker?.cancel();
     _graceTimer?.cancel();
     _music.dispose();
+    WakelockPlus.disable();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

@@ -54,7 +54,21 @@ void main() {
     expect(t.progress, 1.0);
   });
 
-  test('유예 시간 상수는 0초다', () {
-    expect(kGraceSeconds, 0);
+  test('유예 시간이 있어야 짧은 이탈이 곧바로 실패가 되지 않는다', () {
+    expect(kGraceSeconds, greaterThan(0));
+  });
+
+  test('백그라운드에 있던 시간만큼 시계로 따라잡는다', () {
+    final t = FocusTimer(60);
+    t.tick();
+    t.syncElapsed(30);
+    expect(t.elapsedSeconds, 30);
+    // 뒤로는 안 간다.
+    t.syncElapsed(10);
+    expect(t.elapsedSeconds, 30);
+    // 따라잡다가 시간을 다 쓰면 성공으로 끝난다.
+    t.syncElapsed(90);
+    expect(t.elapsedSeconds, 60);
+    expect(t.outcome, FocusOutcome.success);
   });
 }

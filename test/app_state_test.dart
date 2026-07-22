@@ -80,7 +80,8 @@ void main() {
 
   test('저장값이 JSON이어도 항목 모양이 틀리면 빈 목록으로 시작한다', () async {
     SharedPreferences.setMockInitialValues({
-      'focus_sessions': '[{"startedAt":"2026-07-20T10:00:00.000","success":true}]',
+      'focus_sessions':
+          '[{"startedAt":"2026-07-20T10:00:00.000","success":true}]',
     });
     final state = AppState();
     await state.load();

@@ -38,6 +38,7 @@ dependencies:
   rive: 0.13.20
   just_audio: ^0.10.6
   home_widget: ^0.9.3
+  wakelock_plus: ^1.7.0
 
 dev_dependencies:
   flutter_test:
