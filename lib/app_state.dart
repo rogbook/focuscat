@@ -42,6 +42,14 @@ class FocusSession {
 class AppState extends ChangeNotifier {
   static const _key = 'focus_sessions';
   static const _minutesKey = 'last_minutes';
+  static const _adCounterKey = 'ad_counter';
+
+  /// 몇 번마다 광고를 한 번 띄울지. 집중 앱에서 매번 광고는 거슬리므로
+  /// 세션 3회마다 한 번만 보여준다.
+  static const _adEvery = 3;
+
+  /// 집중이 끝난 횟수(광고 주기용). 앱을 껐다 켜도 이어진다.
+  int _adCounter = 0;
 
   /// 마지막으로 고른 집중 시간(분). 앱을 껐다 켜도, 위젯에서 시작해도 이 값을 쓴다.
   int lastMinutes = 25;
@@ -78,6 +86,7 @@ class AppState extends ChangeNotifier {
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     lastMinutes = prefs.getInt(_minutesKey) ?? 25;
+    _adCounter = prefs.getInt(_adCounterKey) ?? 0;
     final raw = prefs.getString(_key);
     _sessions.clear();
     if (raw != null) {
@@ -93,6 +102,15 @@ class AppState extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  /// 집중이 한 번 끝났음을 세고, 이번에 광고를 띄울 차례면 true.
+  /// 세 번째마다 참이 된다. 카운트는 영속화해 앱을 껐다 켜도 이어진다.
+  Future<bool> shouldShowAdOnThisFinish() async {
+    _adCounter++;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_adCounterKey, _adCounter);
+    return _adCounter % _adEvery == 0;
   }
 
   Future<void> setLastMinutes(int minutes) async {

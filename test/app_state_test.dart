@@ -87,4 +87,24 @@ void main() {
     await state.load();
     expect(state.sessions, isEmpty);
   });
+
+  test('광고는 세 번째 집중마다 한 번만 뜬다', () async {
+    final state = AppState();
+    await state.load();
+    final results = [
+      for (var i = 0; i < 7; i++) await state.shouldShowAdOnThisFinish(),
+    ];
+    expect(results, [false, false, true, false, false, true, false]);
+  });
+
+  test('광고 카운트는 앱을 껐다 켜도 이어진다', () async {
+    final a = AppState();
+    await a.load();
+    await a.shouldShowAdOnThisFinish(); // 1
+    await a.shouldShowAdOnThisFinish(); // 2
+    // 재시작 — 저장된 카운트를 이어받아 다음이 3번째가 되어야 한다.
+    final b = AppState();
+    await b.load();
+    expect(await b.shouldShowAdOnThisFinish(), isTrue);
+  });
 }

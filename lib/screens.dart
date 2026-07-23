@@ -524,10 +524,13 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     super.initState();
-    // 광고는 집중이 끝난 뒤 여기서만 나온다. 집중 중에는 절대 띄우지 않는다.
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Ads.instance.showIfReady(),
-    );
+    // 광고는 집중이 끝난 뒤 여기서만 나온다. 집중 중에는 절대 띄우지 않고,
+    // 매번도 아니다 — 세션 3회마다 한 번만.
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (await appState.shouldShowAdOnThisFinish()) {
+        await Ads.instance.showIfReady();
+      }
+    });
   }
 
   @override
