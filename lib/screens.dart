@@ -10,6 +10,7 @@ import 'ads.dart';
 import 'app_state.dart';
 import 'cat.dart';
 import 'focus_timer.dart';
+import 'hunt.dart';
 import 'l10n/app_localizations.dart';
 
 /// 이 화면의 번역 문구. 기기 언어에 맞는 것이 자동으로 잡힌다.
@@ -19,6 +20,11 @@ AppLocalizations _t(BuildContext c) => AppLocalizations.of(c)!;
 /// (Mobile_app_design | Todo app, node 1:406)
 const kTeal = Color(0xFF50C2C9);
 const kBg = Color(0xFFF0F4F3);
+
+/// 시간이 끝나고 덮치는 장면을 보여주는 시간.
+///
+/// 0초가 되자마자 결과 화면으로 넘어가면 사냥의 마무리가 안 보인다.
+const kPounceDuration = Duration(seconds: 2);
 
 /// 개인정보처리방침 전문. 앱 안에는 요약만 두고, 전문은 여기로 보낸다 —
 /// 같은 글을 코드와 웹에 두 벌 두면 한쪽이 반드시 낡는다.
@@ -343,6 +349,9 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
   bool _musicDisposed = false;
   bool _muted = false;
 
+  /// 덮치는 장면을 보여주는 중. 이 동안 화면을 떠나지 못하게 한다.
+  bool _pouncing = false;
+
   @override
   void initState() {
     super.initState();
@@ -436,6 +445,13 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     _isFinishing = true;
     _ticker?.cancel();
     _graceTimer?.cancel();
+    // 성공했을 때만 덮치는 장면을 보여준다. 포기·이탈은 사냥이 아니라
+    // 중단이라, 기다리게 하면 벌 세우는 것처럼 느껴진다.
+    if (_timer.succeeded && mounted) {
+      setState(() => _pouncing = true);
+      await Future.delayed(kPounceDuration);
+      if (!mounted) return;
+    }
     await appState.recordSession(
       FocusSession(
         startedAt: _startedAt,
@@ -471,7 +487,12 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              CatView(stage: appState.stage, mood: CatMood.focused, size: 200),
+              HuntView(
+                phase: _pouncing
+                    ? HuntPhase.pounce
+                    : huntPhaseFor(_timer.progress),
+                size: 200,
+              ),
               const SizedBox(height: 32),
               Text(
                 _mmss(_timer.remainingSeconds),
@@ -495,10 +516,14 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {
-                  _timer.abandon();
-                  _finish();
-                },
+                // 덮치는 중엔 못 누른다. 이미 성공으로 끝난 세션이라
+                // 여기서 포기가 먹히면 결과가 뒤집힌다.
+                onPressed: _pouncing
+                    ? null
+                    : () {
+                        _timer.abandon();
+                        _finish();
+                      },
                 child: Text(t.giveUp),
               ),
               const SizedBox(height: 48),
@@ -552,11 +577,16 @@ class _ResultScreenState extends State<ResultScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CatView(
-                  stage: appState.stage,
-                  mood: success ? CatMood.happy : CatMood.sad,
-                  size: 220,
-                ),
+                // 성공은 기존 고양이 그대로 — 사냥의 마무리는 집중 화면에서
+                // 이미 보여줬다. 실패했을 때만 놓친 장면을 보여준다.
+                if (success)
+                  CatView(
+                    stage: appState.stage,
+                    mood: CatMood.happy,
+                    size: 220,
+                  )
+                else
+                  const HuntView(phase: HuntPhase.miss, size: 220),
                 const SizedBox(height: 24),
                 Text(
                   message,
