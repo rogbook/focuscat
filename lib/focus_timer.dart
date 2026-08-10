@@ -8,6 +8,15 @@ const int kGraceSeconds = 25;
 /// 집중 세션이 끝난 이유.
 enum FocusOutcome { success, abandoned, leftApp }
 
+/// 끝났을 때 고양이가 울어야 하는가.
+///
+/// 성공했을 때만 운다 — 포기·이탈에 소리를 내면 알림이 아니라 나무라는
+/// 소리가 된다. 음소거를 켜 놨으면 울지 않는다. 그 버튼은 도서관처럼
+/// 소리를 낼 수 없는 곳을 위한 것인데, 거기서 끌 때까지 울면 그 사람은
+/// 앱을 지운다.
+bool shouldMeow(FocusOutcome outcome, bool muted) =>
+    outcome == FocusOutcome.success && !muted;
+
 /// 집중 타이머의 규칙. Flutter를 모른다.
 class FocusTimer {
   FocusTimer(this.durationSeconds) : assert(durationSeconds > 0);

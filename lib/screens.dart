@@ -26,6 +26,12 @@ const kBg = Color(0xFFF0F4F3);
 /// 0초가 되자마자 결과 화면으로 넘어가면 사냥의 마무리가 안 보인다.
 const kPounceDuration = Duration(seconds: 2);
 
+/// 야옹이 스스로 그치기까지의 시간.
+///
+/// 누를 때까지 우는 게 원칙이지만, 폰을 두고 자리를 비웠는데 하염없이 울면
+/// 배터리도 닳고 옆 사람에게 민폐다.
+const kMeowMaxDuration = Duration(minutes: 1);
+
 /// 개인정보처리방침 전문. 앱 안에는 요약만 두고, 전문은 여기로 보낸다 —
 /// 같은 글을 코드와 웹에 두 벌 두면 한쪽이 반드시 낡는다.
 const kPrivacyUrl = 'https://rogbook.github.io/focuscat/privacy-policy/';
@@ -461,7 +467,11 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
     );
     if (!mounted) return;
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => ResultScreen(outcome: _timer.outcome!)),
+      MaterialPageRoute(
+        // 음소거는 이 화면이 갖고 있다. 넘겨주지 않으면 결과 화면이
+        // 소리를 내도 되는지 알 수 없다.
+        builder: (_) => ResultScreen(outcome: _timer.outcome!, muted: _muted),
+      ),
     );
   }
 
@@ -537,25 +547,70 @@ class _FocusScreenState extends State<FocusScreen> with WidgetsBindingObserver {
 
 /// 결과 — 성공하면 뿌듯하게, 실패해도 나무라지 않는다.
 class ResultScreen extends StatefulWidget {
-  const ResultScreen({super.key, required this.outcome});
+  const ResultScreen({super.key, required this.outcome, this.muted = false});
 
   final FocusOutcome outcome;
+
+  /// 집중 화면에서 소리를 꺼 놨는지.
+  final bool muted;
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
+  final _meow = AudioPlayer();
+  bool _meowDisposed = false;
+  Timer? _meowTimeout;
+
   @override
   void initState() {
     super.initState();
+    _startMeow();
     // 광고는 집중이 끝난 뒤 여기서만 나온다. 집중 중에는 절대 띄우지 않고,
     // 매번도 아니다 — 세션 3회마다 한 번만.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (await appState.shouldShowAdOnThisFinish()) {
+        // 야옹과 광고 소리가 겹치면 최악이다.
+        _stopMeow();
         await Ads.instance.showIfReady();
       }
     });
+  }
+
+  /// 집중이 끝났다고 알린다. 누를 때까지 "야옹 … 야옹 …" 반복한다.
+  ///
+  /// 침묵이 파일 안에 들어 있어서 그냥 반복 재생하면 간격이 생긴다.
+  /// 소리가 없거나 오디오 장치가 없어도 결과 화면은 떠야 하므로 실패는 삼킨다.
+  Future<void> _startMeow() async {
+    if (!shouldMeow(widget.outcome, widget.muted)) return;
+    _meowTimeout = Timer(kMeowMaxDuration, _stopMeow);
+    try {
+      await _meow.setAsset('assets/meow.mp3');
+      // 음원을 읽는 동안 화면을 떠났을 수 있다. 그대로 재생하면 화면이
+      // 사라진 뒤에도 소리만 남는다 — 배경음에서 실제로 겪은 일이다.
+      if (_meowDisposed) return;
+      await _meow.setLoopMode(LoopMode.one);
+      if (_meowDisposed) return;
+      _meow.play(); // 끝날 때까지 기다리므로 await 하지 않는다
+    } catch (e) {
+      debugPrint('MEOW failed: $e');
+    }
+  }
+
+  /// 끝내는 경로가 여럿이라(화면 탭·돌아가기·광고·1분 경과) 여러 번 불릴 수
+  /// 있어 한 번만 실제로 dispose 한다.
+  void _stopMeow() {
+    if (_meowDisposed) return;
+    _meowDisposed = true;
+    _meowTimeout?.cancel();
+    _meow.dispose();
+  }
+
+  @override
+  void dispose() {
+    _stopMeow();
+    super.dispose();
   }
 
   @override
@@ -569,43 +624,50 @@ class _ResultScreenState extends State<ResultScreen> {
       FocusOutcome.leftApp => t.resultLeftApp,
     };
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 성공은 기존 고양이 그대로 — 사냥의 마무리는 집중 화면에서
-                // 이미 보여줬다. 실패했을 때만 놓친 장면을 보여준다.
-                if (success)
-                  CatView(
-                    stage: appState.stage,
-                    mood: CatMood.happy,
-                    size: 220,
-                  )
-                else
-                  const HuntView(phase: HuntPhase.miss, size: 220),
-                const SizedBox(height: 24),
-                Text(
-                  message,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  t.totalFocus((appState.totalSuccessSeconds / 60).floor()),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 32),
-                FilledButton(
-                  onPressed: () =>
-                      Navigator.of(context).popUntil((route) => route.isFirst),
-                  child: Text(t.back),
-                ),
-              ],
+      // 화면 아무 데나 누르면 야옹이 그친다. "돌아가기"를 누르면 화면이
+      // 사라지면서 dispose 가 그친다.
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _stopMeow,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: SizedBox(
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 성공은 기존 고양이 그대로 — 사냥의 마무리는 집중 화면에서
+                  // 이미 보여줬다. 실패했을 때만 놓친 장면을 보여준다.
+                  if (success)
+                    CatView(
+                      stage: appState.stage,
+                      mood: CatMood.happy,
+                      size: 220,
+                    )
+                  else
+                    const HuntView(phase: HuntPhase.miss, size: 220),
+                  const SizedBox(height: 24),
+                  Text(
+                    message,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    t.totalFocus((appState.totalSuccessSeconds / 60).floor()),
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 32),
+                  FilledButton(
+                    onPressed: () => Navigator.of(
+                      context,
+                    ).popUntil((route) => route.isFirst),
+                    child: Text(t.back),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

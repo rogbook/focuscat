@@ -71,4 +71,17 @@ void main() {
     expect(t.elapsedSeconds, 60);
     expect(t.outcome, FocusOutcome.success);
   });
+
+  test('성공했고 음소거가 아니면 운다', () {
+    expect(shouldMeow(FocusOutcome.success, false), isTrue);
+  });
+
+  test('음소거를 켜 놨으면 성공해도 안 운다', () {
+    expect(shouldMeow(FocusOutcome.success, true), isFalse);
+  });
+
+  test('포기하거나 앱을 나가서 끝나면 안 운다', () {
+    expect(shouldMeow(FocusOutcome.abandoned, false), isFalse);
+    expect(shouldMeow(FocusOutcome.leftApp, false), isFalse);
+  });
 }

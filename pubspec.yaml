@@ -77,6 +77,11 @@ flutter:
     # 집중 중 배경음악. open-lofi (CC0 1.0, 출처 표기 불필요)
     # https://github.com/btahir/open-lofi — "Coffee Ring Notebook"
     - assets/lofi.mp3
+    # 집중이 끝났을 때 우는 소리. "야옹" 0.5초 + 침묵 1.5초가 한 덩어리라,
+    # 그냥 반복 재생하면 "야옹 … 야옹 …"이 된다. 간격 재는 코드가 필요 없다.
+    # 원본은 오너가 준 mp3. 야옹만(0.54~1.31초) 잘라 모노로 바꾸고, 최대
+    # 음량을 -1.3dB로 맞춘 뒤 1.5초 침묵을 붙였다.
+    - assets/meow.mp3
     # 집중 중 고양이 사냥 장면. 움직이는 WebP라 Image.asset 이 그대로 재생한다.
     # 원본 mp4 → tool/make_hunt_webp.sh 로 변환한다.
     - assets/hunt/
