@@ -77,6 +77,9 @@ flutter:
     # 집중 중 배경음악. open-lofi (CC0 1.0, 출처 표기 불필요)
     # https://github.com/btahir/open-lofi — "Coffee Ring Notebook"
     - assets/lofi.mp3
+    # 집중 중 고양이 사냥 장면. 움직이는 WebP라 Image.asset 이 그대로 재생한다.
+    # 원본 mp4 → tool/make_hunt_webp.sh 로 변환한다.
+    - assets/hunt/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
