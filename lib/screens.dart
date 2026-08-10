@@ -568,6 +568,17 @@ class _ResultScreenState extends State<ResultScreen> {
   bool _meowDisposed = false;
   Timer? _meowTimeout;
 
+  /// 사용자가 야옹을 끄면 완료된다. 광고는 이걸 기다린다.
+  ///
+  /// 예전엔 광고 차례일 때 야옹을 곧바로 껐는데, 소리 파일을 읽는 사이에
+  /// 꺼져 버려서 3회마다 한 번은 야옹이 아예 울리지 않았다. 그리고 그건
+  /// 순서가 거꾸로다 — 자리를 비운 사람을 부르는 게 알림이고, 광고는 그
+  /// 사람이 돌아온 뒤에 볼 것이다.
+  ///
+  /// 시간이 다 돼 스스로 그친 경우엔 완료시키지 않는다. 아무도 없는 화면에
+  /// 광고를 띄우면 노출만 버린다.
+  final _meowAcked = Completer<void>();
+
   @override
   void initState() {
     super.initState();
@@ -575,12 +586,20 @@ class _ResultScreenState extends State<ResultScreen> {
     // 광고는 집중이 끝난 뒤 여기서만 나온다. 집중 중에는 절대 띄우지 않고,
     // 매번도 아니다 — 세션 3회마다 한 번만.
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (await appState.shouldShowAdOnThisFinish()) {
-        // 야옹과 광고 소리가 겹치면 최악이다.
-        _stopMeow();
-        await Ads.instance.showIfReady();
-      }
+      // 횟수는 지금 센다. 광고를 건너뛰어도 다음 집중에서 나오게 하려면
+      // 세는 시점과 보여주는 시점을 나눠야 한다.
+      if (!await appState.shouldShowAdOnThisFinish()) return;
+      await _meowAcked.future;
+      // 화면을 이미 떠났어도 전면 광고는 그대로 뜬다. 위젯이 아니라서
+      // mounted 와 상관없다.
+      await Ads.instance.showIfReady();
     });
+  }
+
+  /// 사용자가 알림을 확인했다 — 야옹을 그치고, 기다리던 광고를 풀어준다.
+  void _ackMeow() {
+    _stopMeow();
+    if (!_meowAcked.isCompleted) _meowAcked.complete();
   }
 
   /// 집중이 끝났다고 알린다. 누를 때까지 "야옹 … 야옹 …" 반복한다.
@@ -629,11 +648,10 @@ class _ResultScreenState extends State<ResultScreen> {
       FocusOutcome.leftApp => t.resultLeftApp,
     };
     return Scaffold(
-      // 화면 아무 데나 누르면 야옹이 그친다. "돌아가기"를 누르면 화면이
-      // 사라지면서 dispose 가 그친다.
+      // 화면 아무 데나 누르면 야옹이 그친다.
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: _stopMeow,
+        onTap: _ackMeow,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -666,9 +684,12 @@ class _ResultScreenState extends State<ResultScreen> {
                   ),
                   const SizedBox(height: 32),
                   FilledButton(
-                    onPressed: () => Navigator.of(
-                      context,
-                    ).popUntil((route) => route.isFirst),
+                    // 이것도 "확인했다"로 친다. 야옹을 그치고 기다리던 광고를
+                    // 풀어준 뒤 홈으로 간다.
+                    onPressed: () {
+                      _ackMeow();
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    },
                     child: Text(t.back),
                   ),
                 ],
