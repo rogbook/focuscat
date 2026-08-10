@@ -25,6 +25,22 @@ class Ads {
       ? 'ca-app-pub-8879427346433924/9191674861'
       : 'ca-app-pub-8879427346433924/3200981586';
 
+  /// 여기 적힌 기기에는 실제 광고 대신 항상 테스트 광고가 나온다.
+  ///
+  /// 실제 광고 단위로 개발하며 광고를 반복해 띄우면 무효 트래픽으로 계정이
+  /// 정지될 수 있다. AdMob 웹사이트의 "테스트 기기"에는 대시가 들어간 IDFA를
+  /// 넣어야 하는데 iOS는 그 값을 어디에서도 보여주지 않는다. SDK가 로그에
+  /// 찍어주는 이 해시값이 같은 일을 한다.
+  ///
+  /// 값 찾는 법: 기기를 맥에 케이블로 연결 → 콘솔 앱에서 기기 선택 →
+  /// testDeviceIdentifiers 로 검색 → 앱 실행 → 따옴표 안의 값.
+  ///
+  /// 출시본에도 그대로 들어간다. 이 기기 한 대가 광고 수익에서 빠지는 대신
+  /// 언제 어느 빌드에서든 안전하게 시험할 수 있다.
+  static const _testDeviceIds = <String>[
+    'f4f75b2951ee8af3072a0e52ea93fc90', // 오너 아이폰
+  ];
+
   RewardedInterstitialAd? _ad;
   bool _loading = false;
 
@@ -33,6 +49,10 @@ class Ads {
   Future<void> init() async {
     await _requestConsent();
     await _requestTracking();
+    // 초기화보다 먼저 걸어야 첫 광고부터 테스트 광고로 나온다.
+    await MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(testDeviceIds: _testDeviceIds),
+    );
     await MobileAds.instance.initialize();
     load();
   }
