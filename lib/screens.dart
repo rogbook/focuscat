@@ -36,7 +36,12 @@ const kMeowMaxDuration = Duration(minutes: 1);
 /// 같은 글을 코드와 웹에 두 벌 두면 한쪽이 반드시 낡는다.
 const kPrivacyUrl = 'https://rogbook.github.io/focuscat/privacy-policy/';
 
-const kAppVersion = '1.0.0';
+/// 앱 정보 화면에 보여주는 버전.
+///
+/// pubspec.yaml 의 version 과 같아야 한다. 한 번 어긋난 적이 있어서
+/// (1.0.1 을 올렸는데 화면은 1.0.0 이었다) test/version_test.dart 가
+/// 둘을 대조한다. 올릴 때 여기와 pubspec 을 같이 고친다.
+const kAppVersion = '1.1.0';
 
 String _mmss(int seconds) {
   final m = (seconds ~/ 60).toString().padLeft(2, '0');
