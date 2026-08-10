@@ -15,12 +15,11 @@
 
 ## 등록 전에 반드시 해야 할 것
 
-1. **AdMob 실제 광고 단위 ID로 교체** — [lib/ads.dart](../lib/ads.dart)와
-   양쪽 플랫폼의 앱 ID(AndroidManifest.xml, Info.plist)가 모두 구글 테스트
-   ID다. 테스트 ID로 출시하면 수익이 0이다.
-2. **개인정보처리방침 URL** — 문서는 docs/privacy-policy/index.html에
-   한국어·영어로 준비돼 있다. 연락처 이메일만 채워 어디든 올리고 URL을
-   Play·App Store·AdMob 세 곳에 넣는다.
+1. ~~AdMob 실제 광고 단위 ID로 교체~~ — 끝났다(2026-08-10 확인). 광고 단위도
+   앱 ID도 양쪽 다 실제 값이다. 구글 테스트 계정은 `~3940256099942544`로
+   시작하는데 우리 것은 `~8879427346433924`다.
+2. ~~개인정보처리방침 URL~~ — https://rogbook.github.io/focuscat/privacy-policy/
+   에 게시돼 있고 앱 안에서도 이 주소로 보낸다.
 3. ~~iOS: App Tracking Transparency~~ — 붙였다.
 4. ~~유럽 대상 광고 동의(UMP)~~ — 붙였다.
 5. **Play 데이터 보안 · App Store 개인정보 양식** — 답안은 data_safety.md에
@@ -28,8 +27,14 @@
 
 ## 확인되지 않은 것
 
-- 실제 광고 노출. 구글 테스트 광고가 개발 환경에서 계속 "재고 없음"을
-  반환해 화면으로 확인하지 못했다. 통합 자체(초기화·요청·응답)는 정상이다.
+- **스크린샷이 1.0 화면이다.** 사냥하는 고양이가 없다. 다시 찍어 올려야
+  1.1.0 내용과 맞는다.
+
+## 확인된 것 (2026-08-10, 1.1.0 준비 중)
+
+- 실제 광고 노출 — 오너 실기기에서 3회째에 뜨는 것까지 봤다. 그 기기는
+  AdMob 테스트 기기로 코드에 등록해 두었다(lib/ads.dart).
+- 완료 야옹 소리, 사냥 애니메이션 4단계, 새 아이콘 모두 실기기 확인.
 
 ---
 
@@ -47,15 +52,15 @@
 | 데이터 보안 답안 | `data_safety.md` | 준비됨 |
 | 개인정보처리방침 | https://rogbook.github.io/focuscat/privacy-policy/ | 게시됨 |
 
-빌드는 확인했다 — `app-release.aab` 70.5MB, versionCode 2, minSdk 24,
-targetSdk 36(Play 요구치 충족). 릴리스 APK를 에뮬레이터에 설치해 R8 축소 후에도
-Rive 고양이가 정상 렌더되는 것까지 봤다.
+1.1.0 빌드는 `app-release.aab` 68MB, versionCode 16, minSdk 24, targetSdk 36.
+(versionCode·versionName 은 pubspec의 `version:` 을 그대로 따른다 —
+`android/app/build.gradle.kts`의 `flutter.versionCode`.)
 
 ### 남은 것 (사람이 해야 하는 것)
 
-1. **업로드 키 만들기** — `android/SIGNING.md` 참고. 이게 없으면 디버그 키로
-   서명되어 Play가 거부한다. **키를 잃어버리면 앱 업데이트가 영영 불가능하다.**
-2. **AdMob 안드로이드 광고 단위 발급** — `lib/ads.dart`의 안드로이드 항목이
-   아직 구글 테스트 ID다. 이대로 출시하면 수익이 0이다.
-3. Play Console에서 앱 만들기 → 위 자산 업로드 → 데이터 보안 설문 →
-   콘텐츠 등급 설문 → 광고 포함 '예' → 내부 테스트 트랙부터 올려보길 권한다.
+1. ~~업로드 키 만들기~~ — 끝났다. `android/key.properties`가 있고 저장소에는
+   안 들어간다. **키를 잃어버리면 앱 업데이트가 영영 불가능하다** — 백업 확인.
+2. ~~AdMob 안드로이드 광고 단위 발급~~ — 끝났다. 실제 ID다.
+3. **프로덕션은 아직 못 간다** — 개인 개발자 계정은 비공개 테스트에서
+   12명이 14일 연속 참여해야 프로덕션 신청이 열린다. **내부 테스트 트랙은
+   이 규칙과 무관하니** 거기부터 올려서 확인한다.
